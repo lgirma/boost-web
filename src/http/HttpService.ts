@@ -6,8 +6,9 @@ export type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'options' | 'head' 
 export abstract class HttpService {
 
     onRequesting = new AppEvent<RequestInit>()
-    onRequestSuccess = new AppEvent<RequestInit>()
-    onRequestError = new AppEvent<any>()
+    onResponseSuccess = new AppEvent<RequestInit>()
+    onResponseNotOk = new AppEvent<Response>()
+    onResponseError = new AppEvent<any>()
     _config: HttpConfig
 
     get<T = any>(url: string, config?: RequestInit): Promise<T> {

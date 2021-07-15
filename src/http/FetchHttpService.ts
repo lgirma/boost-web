@@ -16,12 +16,13 @@ export class FetchHttpService extends HttpService {
                 : ''
             const response = await fetch(`${baseUrl}${url}`, config);
             if (!response.ok) {
+                this.onResponseNotOk.publish(response)
                 throw response
             }
-            this.onRequestSuccess.publish(config)
+            this.onResponseSuccess.publish(config)
             return await response.json()
         } catch (err) {
-            this.onRequestError.publish(err)
+            this.onResponseError.publish(err)
             throw err;
         }
     }
