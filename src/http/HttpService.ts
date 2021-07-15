@@ -1,4 +1,28 @@
-export interface HttpService {
-    get<T = any>(url: string, init?: RequestInit): Promise<T>
-    post<T = any>(url: string, body: any, init?: RequestInit): Promise<T>
+import { ConfigService } from "../config/ConfigService";
+import { AppEvent } from "../events/EventDispatch";
+
+export type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'options' | 'head' | 'patch';
+
+export abstract class HttpService {
+
+    onRequesting = new AppEvent<RequestInit>()
+    onRequestSuccess = new AppEvent<RequestInit>()
+    onRequestError = new AppEvent<any>()
+    _config: HttpConfig
+
+    get<T = any>(url: string, config?: RequestInit): Promise<T> {
+        return this.request<T>('get', url, null, config)
+    }
+    post<T = any>(url: string, body: any, config?: RequestInit): Promise<T> {
+        return this.request<T>('post', url, body, config)
+    }
+    abstract request<T = any>(method: HttpMethod, url: string, body?, config?: RequestInit): Promise<T>
+
+    constructor(configService: ConfigService) {
+        this._config = configService.get<HttpConfig>('http', {ApiBaseUrl: ''})
+    }
+}
+
+export interface HttpConfig {
+    ApiBaseUrl?: string
 }

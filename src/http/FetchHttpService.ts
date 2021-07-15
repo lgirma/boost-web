@@ -1,18 +1,32 @@
-import {HttpService} from "./HttpService";
+import { ConfigService } from "../config/ConfigService";
+import {HttpMethod, HttpService} from "./HttpService";
 
-export class FetchHttpService implements HttpService {
-    async get<T = any>(url: string, init?: RequestInit): Promise<T> {
-        let response = await fetch(url, {method: 'GET', ...init})
-        if (response.ok)
+export class FetchHttpService extends HttpService {
+    async request<T = any>(method: HttpMethod, url: string, body?: any, config?: RequestInit): Promise<T> {
+        config = config || {};
+        config.method = method || 'get';
+        config.headers = config.headers || {};
+        config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
+        if (body != null)
+            config.body = body;
+        try {
+            this.onRequesting.publish(config)
+            let baseUrl = this._config.ApiBaseUrl
+                ? `${this._config.ApiBaseUrl}/`
+                : ''
+            const response = await fetch(`${baseUrl}${url}`, config);
+            if (!response.ok) {
+                throw response
+            }
+            this.onRequestSuccess.publish(config)
             return await response.json()
-        else throw `Request failed: ${response.status}`
+        } catch (err) {
+            this.onRequestError.publish(err)
+            throw err;
+        }
     }
-
-    async post<T = any>(url: string, body: any, init?: RequestInit): Promise<T> {
-        let response = await fetch(url, {method: 'POST', body, ...init})
-        if (response.ok)
-            return await response.json()
-        else throw `Request failed: ${response.status}`
+    
+    constructor(configService: ConfigService) {
+        super(configService)
     }
-
 }
