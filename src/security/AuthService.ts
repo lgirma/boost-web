@@ -9,7 +9,12 @@ export interface AuthConfig {
     PasswordFieldName?: string
 }
 
-export abstract class AuthService {
+export interface AuthService {
+    logout()
+    login(loginData:LoginModel): Promise<void>
+}
+
+export abstract class SimpleAuthService implements AuthService {
     protected _config: AuthConfig
     protected _security: SecurityService
     protected _http: HttpService

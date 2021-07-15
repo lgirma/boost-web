@@ -1,8 +1,8 @@
 import { SecurityService } from ".";
 import { ConfigService, HttpService } from "..";
-import { AuthService } from "./AuthService";
+import { SimpleAuthService } from "./AuthService";
 
-export class JWTAuthService extends AuthService {
+export class JWTAuthService extends SimpleAuthService {
     constructor(config: ConfigService, securityService: SecurityService, http: HttpService) {
         super(config, securityService, http)
         

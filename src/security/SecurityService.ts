@@ -10,7 +10,20 @@ export interface SecurityConfig {
     UnauthorizedPageUrl?: string
 }
 
-export class SecurityService {
+export interface SecurityService {
+    init(isSecure?: boolean)
+    getCurrentPageBundle(): string
+    getCurrentUser(): User
+    getCurrentUserRole(): string
+    getRoleRootUrl(role: string): string
+    getSecureBundles(): string[]
+    gotoRoleHome(roles: string[])
+    gotoUserHome(user?: User)
+    isUserAuthenticated(): boolean
+    setUser(user: User, goHome?: boolean)
+}
+
+export class SimpleSecurityService implements SecurityService {
     private _config: SecurityConfig
     private _userStore: User
 

@@ -1,6 +1,10 @@
 export type InitialConfig = any
 
-export class ConfigService {
+export interface ConfigService {
+    get<T = any>(section?: string, defaultValue?: T): T
+}
+
+export class SimpleConfigService implements ConfigService {
     private _config = {}
 
     get<T = any>(section?: string, defaultValue?: T): T {
