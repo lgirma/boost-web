@@ -1,7 +1,9 @@
 import { SimpleConfigService } from "./config/ConfigService";
 import {FetchHttpService} from "./http";
 import { Simplei18nService } from "./i18n/i18nService";
+import { ConsoleLoggerService, EmptyLoggerService } from "./log";
 import { JWTAuthService, SimpleSecurityService } from "./security";
+import { AlertToastService } from "./ui/AlertToastService";
 import { ToastService } from "./ui/ToastService";
 
 const configService = new SimpleConfigService({
@@ -13,7 +15,7 @@ const httpService = new FetchHttpService(configService)
 const securityService = new SimpleSecurityService(configService)
 const authService = new JWTAuthService(configService, securityService, httpService)
 const i18n = new Simplei18nService(configService)
-const toastService: ToastService
+const toastService: ToastService = new AlertToastService(i18n)
 
 async function main() {
     //document.body.innerHTML = `${(await httpService.get(`item/27842933.json?print=pretty`)).title}`

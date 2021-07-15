@@ -12,15 +12,15 @@ export interface ToastMessage {
     position?: ScreenPosition
 }
 
-let _: (key: string, ...args) => string
-
 export abstract class ToastService {
+    protected _i18n: i18nService
+
     abstract show(options?: ToastMessage);
     abstract hide();
 
     showSuccess(message: string, options?: ToastMessage) {
         this.show({
-            title: _('SUCCESS'),
+            title: this._i18n._('SUCCESS'),
             ...options,
             body: message,
             type: MessageType.SUCCESS
@@ -29,7 +29,7 @@ export abstract class ToastService {
 
     showError(message: string, options?: ToastMessage) {
         this.show({
-            title: _('FAILED'),
+            title: this._i18n._('FAILED'),
             ...options,
             body: message,
             type: MessageType.ERROR
@@ -38,7 +38,7 @@ export abstract class ToastService {
 
     showInfo(message: string, options?: ToastMessage) {
         this.show({
-            title: _('INFO'),
+            title: this._i18n._('INFO'),
             ...options,
             body: message,
             type: MessageType.INFO
@@ -47,7 +47,7 @@ export abstract class ToastService {
 
     showWarning(message: string, options?: ToastMessage) {
         this.show({
-            title: _('WARNING'),
+            title: this._i18n._('WARNING'),
             ...options,
             body: message,
             type: MessageType.WARNING
@@ -55,6 +55,6 @@ export abstract class ToastService {
     }
 
     constructor(i18n: i18nService) {
-        _ = i18n._
+        this._i18n = i18n
     }
 }

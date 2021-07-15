@@ -1,4 +1,5 @@
 import { ConfigService } from "../config"
+import { LoggerService } from "../log"
 
 export type i18nTranslations = {[key: string]: string}
 /**
@@ -31,7 +32,7 @@ export interface i18nConfig {
      */
      DefaultLocale?: string
      /**
-      * Locales your app supports
+      * All locales your app supports
       * Default is `[ {displayName: 'English', key: 'en', shortName: 'En'} ]`
       */
      Locales?: WebLocale[],
@@ -49,6 +50,7 @@ export class Simplei18nService implements i18nService {
     _dictionary = {}
     _currentLang: string
     _config: i18nConfig
+    _logger: LoggerService
 
     _(key: string, ...args): string {
         const currLang = this._currentLang ?? this.getCurrentUserLanguage();
@@ -90,7 +92,8 @@ export class Simplei18nService implements i18nService {
             Locales: [
                 {displayName: 'English', key: 'en', shortName: 'En'}
             ],
-            Translations: {}
+            Translations: {en: {}}
         })
+        this.changeLanguage(this._config.DefaultLocale)
     }
 }
