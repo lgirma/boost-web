@@ -1,8 +1,9 @@
 import { SimpleConfigService } from "./config/ConfigService";
 import {FetchHttpService} from "./http";
 import { Simplei18nService } from "./i18n/i18nService";
-import { ConsoleLoggerService, EmptyLoggerService } from "./log";
 import { JWTAuthService, SimpleSecurityService } from "./security";
+import { DialogService } from "./ui";
+import { AlertDialogService } from "./ui/AlertDialogService";
 import { AlertToastService } from "./ui/AlertToastService";
 import { ToastService } from "./ui/ToastService";
 
@@ -16,6 +17,7 @@ const securityService = new SimpleSecurityService(configService)
 const authService = new JWTAuthService(configService, securityService, httpService)
 const i18n = new Simplei18nService(configService)
 const toastService: ToastService = new AlertToastService(i18n)
+const dialogService: DialogService = new AlertDialogService()
 
 async function main() {
     //document.body.innerHTML = `${(await httpService.get(`item/27842933.json?print=pretty`)).title}`
@@ -32,10 +34,12 @@ async function main() {
         </div>`
     newElt.onsubmit = async e => {
         e.preventDefault()
-        try {            
+        if (!await dialogService.showConfirmAsync('Are you sure?'))
+            return
+        try {
             await authService.login({
-                password: newElt['password'],
-                userId: newElt['email']
+                password: newElt.password.value,
+                userId: newElt.email.value
             })
             toastService.showSuccess('Login success.')
         } catch (er) {

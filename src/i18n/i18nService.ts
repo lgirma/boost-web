@@ -1,5 +1,4 @@
 import { ConfigService } from "../config"
-import { LoggerService } from "../log"
 
 export type i18nTranslations = {[key: string]: string}
 /**
@@ -50,7 +49,6 @@ export class Simplei18nService implements i18nService {
     _dictionary = {}
     _currentLang: string
     _config: i18nConfig
-    _logger: LoggerService
 
     _(key: string, ...args): string {
         const currLang = this._currentLang ?? this.getCurrentUserLanguage();

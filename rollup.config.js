@@ -15,7 +15,7 @@ const devConfig = () => ({
     input: 'src/main.ts',
     output: {
         name: 'boostWeb',
-        file: pkg.browser,
+        file: 'public/index.umd.js',
         format: 'umd'
     },
     plugins: [
