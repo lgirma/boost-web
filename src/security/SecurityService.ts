@@ -1,5 +1,7 @@
 import { ConfigService } from "../config";
 import { User } from "./Models";
+import {SessionStorageService} from "../session/SessionStorageService";
+import {NavigationService} from "../routing";
 
 export interface SecurityConfig {
     RoleBundles?: { [key: string]: string }
@@ -24,11 +26,13 @@ export interface SecurityService {
 }
 
 export class SimpleSecurityService implements SecurityService {
-    private _config: SecurityConfig
-    private _userStore: User
+    protected _config: SecurityConfig
+    protected _userStore: User
+    protected _sessionStorage: SessionStorageService
+    protected _nav: NavigationService;
 
     getCurrentPageBundle(): string {
-        return window.location.pathname.replace('/', '').replace('.html', '');
+        return this._nav.getCurrentPath().replace('/', '').replace('.html', '');
     }
 
     getCurrentUser(): User {
@@ -48,7 +52,7 @@ export class SimpleSecurityService implements SecurityService {
     }
 
     gotoRoleHome(roles: string[]) {
-        window.location.href = '/' + (this.getRoleRootUrl(roles.find(_ => 1)) || 'error');
+        this._nav.navTo('/' + (this.getRoleRootUrl(roles.find(_ => 1)) || 'error'))
     }
 
     gotoUserHome(user: User = null) {
@@ -64,20 +68,19 @@ export class SimpleSecurityService implements SecurityService {
 
     setUser(user: User, goHome = true) {
         this._userStore = user;
-        localStorage.setItem('user', user == null ? null : JSON.stringify(user))
+        this._sessionStorage.setItem('user', user == null ? null : user)
         if (user != null && goHome)
             this.gotoUserHome(user);
     }
 
     init(isSecure = true) {
-        const userJson = localStorage.getItem('user');
-        const usr = JSON.parse(userJson);
-        if (userJson != null)
+        const usr = this._sessionStorage.getItem<User>('user');
+        if (usr != null)
             this._userStore = usr;
         const hasUserLoggedIn = this.isUserAuthenticated();
 
         if (isSecure && !hasUserLoggedIn) {
-            window.location.href = this._config.AuthPageUrl;
+            this._nav.navTo(this._config.AuthPageUrl)
             return null;
         }
         if (!isSecure && hasUserLoggedIn) {
@@ -95,7 +98,7 @@ export class SimpleSecurityService implements SecurityService {
         }
     }
 
-    constructor(config: ConfigService) {
+    constructor(config: ConfigService, sessionStorage: SessionStorageService, nav: NavigationService) {
         this._config = config.get<SecurityConfig>('security', {
             RoleBundles: {},
             Roles: {},
@@ -104,5 +107,7 @@ export class SimpleSecurityService implements SecurityService {
             LogoutUrl: '/logout',
             UnauthorizedPageUrl: '/error'
         })
+        this._sessionStorage = sessionStorage
+        this._nav = nav
     }
 }
