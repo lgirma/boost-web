@@ -1,4 +1,4 @@
-import { MessageType } from ".";
+import { MessageType } from "./Common";
 
 export interface DialogOptions {
     title?: string

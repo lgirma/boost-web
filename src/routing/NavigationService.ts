@@ -3,11 +3,7 @@ export interface NavigationService {
     getCurrentPath(): string;
 }
 
-export class WindowNavigationService implements NavigationService {
-    navTo(url: string) {
-        window.location.href = url
-    }
-    getCurrentPath(): string {
-        return window.location.pathname
-    }
+export interface NavigationEventData {
+    cancel: boolean
+    url: string
 }
