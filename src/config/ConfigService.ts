@@ -5,7 +5,7 @@ export interface ConfigService {
 }
 
 export class SimpleConfigService implements ConfigService {
-    private _config = {}
+    private readonly _config = {}
 
     get<T = any>(section?: string, defaultValue?: T): T {
         if (this._config[section] == null)
@@ -20,3 +20,5 @@ export class SimpleConfigService implements ConfigService {
         this._config = initialConfig
     }
 }
+
+export function configFor<T>(value: T): T {return value}

@@ -1,11 +1,9 @@
-import { SimpleConfigService } from "./config/ConfigService";
+import { SimpleConfigService } from "./config";
 import {FetchHttpService} from "./http";
-import { Simplei18nService } from "./i18n/i18nService";
+import { Simplei18nService } from "./i18n";
 import { JWTAuthService, SimpleSecurityService } from "./security";
-import { DialogService } from "./ui";
-import { AlertDialogService } from "./ui/AlertDialogService";
-import { AlertToastService } from "./ui/AlertToastService";
-import { ToastService } from "./ui/ToastService";
+import { AlertDialogService, AlertToastService, ToastService, DialogService } from "./ui";
+import {LocalSessionStorageService} from "./session/LocalSessionStorageService";
 
 const configService = new SimpleConfigService({
     http: {
@@ -15,7 +13,8 @@ const configService = new SimpleConfigService({
 const httpService = new FetchHttpService(configService)
 const securityService = new SimpleSecurityService(configService)
 const authService = new JWTAuthService(configService, securityService, httpService)
-const i18n = new Simplei18nService(configService)
+const sessionStorage = new LocalSessionStorageService()
+const i18n = new Simplei18nService(configService, sessionStorage)
 const toastService: ToastService = new AlertToastService(i18n)
 const dialogService: DialogService = new AlertDialogService()
 

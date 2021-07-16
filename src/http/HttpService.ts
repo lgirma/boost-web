@@ -1,5 +1,5 @@
-import { ConfigService } from "../config/ConfigService";
-import { AppEvent } from "../events/EventDispatch";
+import { ConfigService } from "../config";
+import { AppEvent } from "../events";
 
 export type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'options' | 'head' | 'patch';
 
@@ -11,19 +11,29 @@ export abstract class HttpService {
     onResponseError = new AppEvent<any>()
     _config: HttpConfig
 
-    get<T = any>(url: string, config?: RequestInit): Promise<T> {
-        return this.request<T>('get', url, null, config)
+    async getContent(response: Response) {
+        const txtResponse = await response.text()
+        if (txtResponse == null)
+            return null
+        try {return JSON.parse(txtResponse)}
+        catch (e) {return txtResponse as any}
     }
-    post<T = any>(url: string, body: any, config?: RequestInit): Promise<T> {
-        return this.request<T>('post', url, body, config)
-    }
-    abstract request<T = any>(method: HttpMethod, url: string, body?, config?: RequestInit): Promise<T>
 
-    constructor(configService: ConfigService) {
-        this._config = configService.get<HttpConfig>('http', {ApiBaseUrl: ''})
+    async get<T = any>(url: string, config?: RequestInit): Promise<T> {
+        const response = await this.request('get', url, null, config)
+        return await this.getContent(response)
+    }
+    async post<T = any>(url: string, body: any, config?: RequestInit): Promise<T> {
+        const response = await this.request('post', url, body, config)
+        return await this.getContent(response)
+    }
+    abstract request(method: HttpMethod, url: string, body?: any, config?: RequestInit): Promise<Response>
+
+    protected constructor(configService: ConfigService) {
+        this._config = configService.get<HttpConfig>('http', {apiBaseUrl: ''})
     }
 }
 
 export interface HttpConfig {
-    ApiBaseUrl?: string
+    apiBaseUrl?: string
 }

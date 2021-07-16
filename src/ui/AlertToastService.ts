@@ -1,4 +1,4 @@
-import { i18nService } from "../i18n/i18nService";
+import { i18nService } from "../i18n";
 import { ToastMessage, ToastService } from "./ToastService";
 
 export class AlertToastService extends ToastService {

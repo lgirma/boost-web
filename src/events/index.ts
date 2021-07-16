@@ -1,1 +1,1 @@
-export * from './EventDispatch'
+export * from './AppEvent'
