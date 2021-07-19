@@ -1,6 +1,6 @@
 import { ConfigService } from "../config";
 import { User } from "./Models";
-import {SessionStorageService} from "../session/SessionStorageService";
+import {SessionStorageService} from "../session";
 import {NavigationService} from "../routing";
 
 export interface SecurityConfig {
@@ -23,6 +23,7 @@ export interface SecurityService {
     gotoUserHome(user?: User)
     isUserAuthenticated(): boolean
     setUser(user: User, goHome?: boolean)
+    gotoUrl(url: string)
 }
 
 export class SimpleSecurityService implements SecurityService {
@@ -47,19 +48,31 @@ export class SimpleSecurityService implements SecurityService {
         return this._config.RoleBundles[role];
     }
 
+    gotoUrl(url: string) {
+        if (url == null || url.length == 0 || !this.isUserAuthenticated())
+            this.gotoUserHome()
+        if (url[0] != '/')
+            url = '/' + url
+        // TODO: Check if current role is allowed
+        this._nav.navTo(url)
+    }
+
     getSecureBundles(): string[] {
         return Object.keys(this._config.Roles).map(r => this._config.RoleBundles[r]);
     }
 
     gotoRoleHome(roles: string[]) {
-        this._nav.navTo('/' + (this.getRoleRootUrl(roles.find(_ => 1)) || 'error'))
+        const primaryRole = roles.find(_ => 1)
+        const rootUrl = this.getRoleRootUrl(primaryRole)
+        this._nav.navTo(rootUrl ? `/${rootUrl}` : this._config.UnauthorizedPageUrl)
     }
 
     gotoUserHome(user: User = null) {
         if (user == null)
             user = this.getCurrentUser();
-
-        this.gotoRoleHome(user.roles);
+        if (user == null)
+            this._nav.navTo(this._config.AuthPageUrl)
+        this.gotoRoleHome(user.getRoles());
     }
 
     isUserAuthenticated(): boolean {
@@ -91,7 +104,7 @@ export class SimpleSecurityService implements SecurityService {
             // check if role is denied
             const bundle = this.getCurrentPageBundle();
             const secureBundles = this.getSecureBundles();
-            if (secureBundles.indexOf(bundle) > -1 && usr.roles.find(r => bundle === this._config.RoleBundles[r]) == null) {
+            if (secureBundles.indexOf(bundle) > -1 && usr.getRoles().find(r => bundle === this._config.RoleBundles[r]) == null) {
                 this.gotoUserHome(usr);
                 return null;
             }

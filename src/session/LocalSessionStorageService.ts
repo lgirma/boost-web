@@ -1,7 +1,7 @@
 import {SessionStorageService} from "./SessionStorageService";
 
 export class LocalSessionStorageService implements SessionStorageService {
-    getItem<T = string>(key: string): T | null {
+    getItem<T = any>(key: string): T | null {
         let result = globalThis.localStorage.getItem(key);
         if (result == null)
             return null

@@ -15,6 +15,9 @@ export function GetMockSessionStorageService(): SessionStorageService {
     return {
         _keyValues: {},
         getItem(key) {
+            const existing = this._keyValues[key]
+            if (existing == null)
+                return null
             return JSON.parse(this._keyValues[key])
         },
         setItem(key, val) {
@@ -106,9 +109,10 @@ export function GetMockHttpService(urlRoute?: (url: string, body?: any) => any):
 
 export function getUser(name: string, fullName: string, roles: string[], primaryRole?: string): User {
     return {
+        name, fullName, roles, primaryRole,
         getFullName() {return fullName},
         getName(){return name},
         getPrimaryRole() {return primaryRole ?? roles[0]},
         getRoles() {return roles}
-    }
+    } as User
 }

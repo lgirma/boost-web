@@ -1,10 +1,24 @@
 import { SecurityService } from ".";
-import { ConfigService, HttpService } from "..";
+import {ConfigService, HttpService, NavigationService, User} from "..";
 import { SimpleAuthService } from "./AuthService";
 
+export class JWTAuthenticatedUser implements User {
+    fullName: string;
+    name: string;
+    primaryRole: string;
+    roles: string[];
+    token: string
+
+    getFullName(): string {return this.fullName}
+    getName(): string {return this.name}
+    getPrimaryRole(): string {return this.primaryRole}
+    getRoles(): string[] {return this.roles}
+
+}
+
 export class JWTAuthService extends SimpleAuthService {
-    constructor(config: ConfigService, securityService: SecurityService, http: HttpService) {
-        super(config, securityService, http)
+    constructor(config: ConfigService, securityService: SecurityService, http: HttpService, nav: NavigationService) {
+        super(config, securityService, http, nav)
         
         http.onRequesting.subscribe(cb => {
             let user = securityService.getCurrentUser()
