@@ -1,7 +1,8 @@
 import { ConfigService } from "../config";
 import { HttpService } from "../http";
-import { LoginModel } from "./Models";
+import {LoginModel, User} from "./Models";
 import { SecurityService } from "./SecurityService";
+import {NavigationService} from "../routing";
 
 export interface AuthConfig {
     LoginApiUrl?: string,
@@ -11,28 +12,30 @@ export interface AuthConfig {
 
 export interface AuthService {
     logout()
-    login(loginData:LoginModel): Promise<void>
+    login(loginData:LoginModel): Promise<User>
 }
 
-export abstract class SimpleAuthService implements AuthService {
+export class SimpleAuthService implements AuthService {
     protected _config: AuthConfig
     protected _security: SecurityService
     protected _http: HttpService
+    protected _nav: NavigationService
 
     logout() {
         this._security.setUser(null)
-        window.location.href = '/'
+        this._nav.navTo('/')
     }
-    async login(loginData: LoginModel): Promise<void> {
+    async login(loginData: LoginModel): Promise<User> {
         const {userId, password} = loginData;
         let loggedInUser = await this._http.post(this._config.LoginApiUrl, {
             [this._config.UserIdFieldName]: userId,
             [this._config.PasswordFieldName]: password
         })
         this._security.setUser(loggedInUser)
+        return loggedInUser
     }
 
-    constructor(config: ConfigService, securityService: SecurityService, http: HttpService) {
+    constructor(config: ConfigService, securityService: SecurityService, http: HttpService, nav: NavigationService) {
         this._config = config.get<AuthConfig>('auth', {
             LoginApiUrl: 'auth/login',
             PasswordFieldName: 'password',
@@ -40,5 +43,6 @@ export abstract class SimpleAuthService implements AuthService {
         })
         this._security = securityService
         this._http = http
+        this._nav = nav
     }
 }

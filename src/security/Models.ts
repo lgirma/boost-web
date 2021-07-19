@@ -4,9 +4,8 @@ export interface LoginModel {
 }
 
 export interface User {
-    token: string
-    roles: string[],
-    fullName: string,
-    name: string,
-    primaryRole: string
+    getRoles(): string[]
+    getFullName(): string
+    getName(): string
+    getPrimaryRole(): string
 }

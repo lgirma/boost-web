@@ -1,15 +1,23 @@
 import { ConfigService } from "../config";
-import {HttpMethod, HttpService} from "./HttpService";
+import {HttpMethod} from "./HttpService";
+import {HttpServiceBase} from "./HttpServiceBase";
 
-export class FetchHttpService extends HttpService {
+export class FetchHttpService extends HttpServiceBase {
     async request(method: HttpMethod, url: string, body?: any, config?: RequestInit): Promise<Response> {
         config = config || {};
         config.method = method || 'get';
         config.headers = config.headers || {};
         config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
         body ??= config.body
-        if (body != null)
-            config.body = body.constructor === globalThis.FormData ? body : JSON.stringify(body)
+        if (body != null) {
+            if (body.constructor === globalThis.FormData) {
+                config.headers['Content-Type'] = 'multipart/form-data'
+                config.body = body
+            }
+            else {
+                config.body = JSON.stringify(body)
+            }
+        }
 
         this.onRequesting.publish(config)
         let baseUrl = this._config.apiBaseUrl

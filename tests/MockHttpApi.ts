@@ -1,26 +1,22 @@
-import {createServer, IncomingMessage, Server, ServerResponse} from "http";
+import express from 'express'
+import type {Express} from "express";
 
-let server: Server
+let app: Express
+let server: any
 
-export function createAndStartApi(urlToResponseMap?: (req: IncomingMessage, res: ServerResponse) => string | undefined) {
-    server = createServer(function (req, res) {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Request-Method', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-        res.setHeader('Access-Control-Allow-Headers', '*');
-        res.setHeader('Content-Type', 'application/json');
-        if ( req.method === 'OPTIONS' ) {
-            res.writeHead(200);
-            res.end();
-            return;
-        }
-        let response = urlToResponseMap != null ? (urlToResponseMap(req, res) ?? '') : ''
-        res.write(response); //write a response to the client
-        res.end(); //end the response
+export function createAndStartApi(routes: (app: Express) => void) {
+    app = express();
+    const port = 8484;
+    app.use(express.json());
+    app.use(express.urlencoded( {extended: true} ));
+
+    routes(app)
+
+    server = app.listen(port, () => {
+        console.log(`Example app running on http://localhost:${port}!`)
     });
-    server.listen(8484);
 }
 
 export function stopApi() {
-    server.close()
+    server?.close()
 }
