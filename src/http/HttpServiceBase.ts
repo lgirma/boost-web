@@ -18,7 +18,7 @@ export abstract class HttpServiceBase implements HttpService {
     onResponseSuccess = new AppEvent<RequestInit>()
     onResponseNotOk = new AppEvent<Response>()
     onResponseError = new AppEvent<any>()
-    _config: HttpConfig
+    protected _config: HttpConfig
 
     async get<T = any>(url: string, config?: RequestInit): Promise<T> {
         const response = await this.request('get', url, null, config)

@@ -10,7 +10,7 @@ export abstract class BusyBarService {
     abstract stop(bar?)
     abstract createBar(options?: BusyBarOptions): any
 
-    constructor(httpService: HttpService) {
+    protected constructor(httpService: HttpService) {
         httpService.onRequesting.subscribe(() => this.start(this))
         httpService.onResponseSuccess.subscribe(() => this.stop(this))
         httpService.onResponseError.subscribe(() => this.stop(this))

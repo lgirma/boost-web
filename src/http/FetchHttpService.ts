@@ -43,7 +43,7 @@ export class FetchHttpService extends HttpServiceBase {
         }
     }
     
-    constructor(configService: ConfigService) {
-        super(configService)
+    constructor(protected _configService: ConfigService) {
+        super(_configService)
     }
 }
