@@ -3,7 +3,7 @@ import {FetchHttpService} from "./http";
 import { Simplei18nService } from "./i18n";
 import { JWTAuthService, SimpleSecurityService } from "./security";
 import { AlertDialogService, AlertToastService, ToastService, DialogService } from "./ui";
-import {LocalSessionStorageService} from "./session/LocalSessionStorageService";
+import {LocalSessionStorageService} from "./session";
 import {WindowNavigationService} from "./routing";
 
 const configService = new SimpleConfigService({
@@ -15,7 +15,7 @@ const httpService = new FetchHttpService(configService)
 const navService = new WindowNavigationService()
 const sessionStorage = new LocalSessionStorageService()
 const securityService = new SimpleSecurityService(configService, sessionStorage, navService)
-const authService = new JWTAuthService(configService, securityService, httpService)
+const authService = new JWTAuthService(configService, securityService, httpService, navService)
 const i18n = new Simplei18nService(configService, sessionStorage)
 const toastService: ToastService = new AlertToastService(i18n)
 const dialogService: DialogService = new AlertDialogService()

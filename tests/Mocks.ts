@@ -1,5 +1,5 @@
-import {ConfigService, HttpService, SecurityService, User, NavigationService, HttpMethod} from "../src";
-import {SessionStorageService} from "../src/session";
+import {ConfigService, HttpService, SecurityService, User, NavigationService, HttpMethod, WebImage} from "../src";
+import {SessionStorageService} from "../src";
 
 export function GetMockConfigService(initialConfig: any = {}): ConfigService {
     return {
@@ -53,7 +53,8 @@ export function GetMockSecurityService(): SecurityService {
         },
         setUser(user: User, _?: boolean): any {
             this._user = user
-        }
+        },
+        gotoUrl(_) { }
 
     } as SecurityService
 }
@@ -113,6 +114,7 @@ export function getUser(name: string, fullName: string, roles: string[], primary
         getFullName() {return fullName},
         getName(){return name},
         getPrimaryRole() {return primaryRole ?? roles[0]},
-        getRoles() {return roles}
+        getRoles() {return roles},
+        getAvatar(_?): Promise<WebImage> { return Promise.resolve('')  }
     } as User
 }

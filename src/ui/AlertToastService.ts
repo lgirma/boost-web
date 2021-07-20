@@ -5,9 +5,7 @@ export class AlertToastService extends ToastService {
     show(options?: ToastMessage) {
         alert(`${options.title}\n${options.body}`)
     }
-    hide() {
-        
-    }
+    hide() { }
 
     constructor(i18n: i18nService) {
         super(i18n)

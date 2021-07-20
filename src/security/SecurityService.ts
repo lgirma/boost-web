@@ -15,7 +15,7 @@ export interface SecurityConfig {
 export interface SecurityService {
     init(isSecure?: boolean)
     getCurrentPageBundle(): string
-    getCurrentUser(): User
+    getCurrentUser<TUser extends User = User>(): TUser
     getCurrentUserRole(): string
     getRoleRootUrl(role: string): string
     getSecureBundles(): string[]
@@ -36,8 +36,8 @@ export class SimpleSecurityService implements SecurityService {
         return this._nav.getCurrentPath().replace('/', '').replace('.html', '');
     }
 
-    getCurrentUser(): User {
-        return this._userStore;
+    getCurrentUser<TUser extends User = User>(): TUser {
+        return this._userStore as TUser;
     }
 
     getCurrentUserRole(): string {

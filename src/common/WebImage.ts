@@ -1,0 +1,1 @@
+export type WebImage = string | HTMLImageElement | File

@@ -1,4 +1,4 @@
-import { i18nService } from "../i18n/i18nService";
+import { i18nService } from "../i18n";
 import { ScreenPosition, MessageType } from "./Common";
 
 export interface ToastMessage {
@@ -54,7 +54,7 @@ export abstract class ToastService {
         });
     }
 
-    constructor(i18n: i18nService) {
+    protected constructor(i18n: i18nService) {
         this._i18n = i18n
     }
 }

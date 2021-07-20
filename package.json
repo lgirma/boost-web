@@ -37,6 +37,7 @@
     "chai": "^4.3.4",
     "chai-spies": "^1.0.0",
     "express": "^4.17.1",
+    "formdata-node": "^3.5.4",
     "formidable": "^1.2.2",
     "mocha": "^8.4.0",
     "node-fetch": "^2.6.1",
@@ -49,8 +50,5 @@
     "README.md",
     "dist",
     "package.json"
-  ],
-  "dependencies": {
-    "formdata-node": "^3.5.4"
-  }
+  ]
 }

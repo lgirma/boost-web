@@ -12,7 +12,7 @@ export interface AuthConfig {
 
 export interface AuthService {
     logout()
-    login(loginData:LoginModel): Promise<User>
+    login<TUser extends User = User>(loginData:LoginModel): Promise<TUser>
 }
 
 export class SimpleAuthService implements AuthService {
@@ -25,7 +25,7 @@ export class SimpleAuthService implements AuthService {
         this._security.setUser(null)
         this._nav.navTo('/')
     }
-    async login(loginData: LoginModel): Promise<User> {
+    async login<TUser extends User = User>(loginData: LoginModel): Promise<TUser> {
         const {userId, password} = loginData;
         let loggedInUser = await this._http.post(this._config.LoginApiUrl, {
             [this._config.UserIdFieldName]: userId,
