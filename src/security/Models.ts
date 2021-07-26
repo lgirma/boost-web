@@ -4,7 +4,7 @@ export interface LoginModel {
     userId: string,
     password: string
 }
-new Image()
+
 export interface User {
     getRoles(): string[]
     getFullName(): string

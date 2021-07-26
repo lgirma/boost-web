@@ -68,7 +68,7 @@ export interface UIElement extends Themeable {
     elevation?: number
 }
 
-export const MessageMap = {
+export const Messagei18nKeys = {
     [MessageType.NONE]: 'INFO',
     [MessageType.INFO]: 'INFO',
     [MessageType.SUCCESS]: 'SUCCESS',

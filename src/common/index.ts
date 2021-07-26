@@ -1,2 +1,2 @@
 export * from './WebImage'
-export * from './HtmlTemplate'
+export * from './Types'

@@ -1,4 +1,4 @@
-import {ConfigService, HttpService, SecurityService, User, NavigationService, HttpMethod, WebImage} from "../src";
+import {ConfigService, HttpService, SecurityService, User, NavigationService, HttpMethod, WebImage, AppService, AppConfig} from "../src";
 import {SessionStorageService} from "../src";
 
 export function GetMockConfigService(initialConfig: any = {}): ConfigService {
@@ -9,6 +9,15 @@ export function GetMockConfigService(initialConfig: any = {}): ConfigService {
             return this._config[section]
         }
     } as ConfigService
+}
+
+export function GetMockAppService(appName = 'Test'): AppService {
+    return {
+        getName(): string {return appName},
+        getInfo(): AppConfig {
+            return {name: appName}
+        }
+    }
 }
 
 export function GetMockSessionStorageService(): SessionStorageService {
