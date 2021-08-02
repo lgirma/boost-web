@@ -1,6 +1,6 @@
-import {DialogOptions, DialogServiceBase} from "./DialogService";
+import {DialogOptions, MessageBoxServiceBase} from "./MessageBoxService";
 
-export class AlertDialogService extends DialogServiceBase {
+export class AlertDialogService extends MessageBoxServiceBase {
     showMessage(message: string) {
         alert(message)
     }

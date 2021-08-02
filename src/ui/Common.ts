@@ -1,4 +1,4 @@
-export enum ScreenPosition {
+export const enum ScreenPosition {
     TopLeft,
     TopRight,
     BottomLeft,
@@ -6,7 +6,7 @@ export enum ScreenPosition {
     Center
 }
 
-export enum MessageType {
+export const enum MessageType {
     NONE,
     SUCCESS,
     ERROR,
@@ -14,11 +14,11 @@ export enum MessageType {
     INFO
 }
 
-export enum Size {
+export const enum Size {
     MD, XS, SM, LG, XL
 }
 
-export enum MaterialType {
+export const enum MaterialType {
     /**
      * Emphasis on the foreground/text. Message is reflected/communicated through the content.
      */
@@ -33,12 +33,12 @@ export enum MaterialType {
     OUTLINED
 }
 
-export enum Temperature {
+export const enum Temperature {
     WARM,
     COLD
 }
 
-export enum LightingType {
+export const enum LightingType {
     LIGHT,
     WHITE,
     DARK,

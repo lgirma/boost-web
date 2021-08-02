@@ -14,5 +14,6 @@ export abstract class BusyBarService {
         httpService.onRequesting.subscribe(() => this.start(this))
         httpService.onResponseSuccess.subscribe(() => this.stop(this))
         httpService.onResponseError.subscribe(() => this.stop(this))
+        httpService.onResponseNotOk.subscribe(() => this.stop(this))
     }
 }

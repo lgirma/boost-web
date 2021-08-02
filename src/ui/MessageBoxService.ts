@@ -12,7 +12,7 @@ export interface DialogOptions {
     dontCloseOnAccept?: boolean
 }
 
-export interface DialogService {
+export interface MessageBoxService {
     showMessage(message: string, messageType?: MessageType, options?: DialogOptions)
     showConfirm(question?: string, options?: DialogOptions)
     showError(message: string, options?: DialogOptions)
@@ -23,7 +23,7 @@ export interface DialogService {
     init()
 }
 
-export abstract class DialogServiceBase implements DialogService {
+export abstract class MessageBoxServiceBase implements MessageBoxService {
     init() {}
     abstract showMessage(message: string, messageType?: MessageType, options?: DialogOptions)
     abstract showConfirm(question?: string, options?: DialogOptions)

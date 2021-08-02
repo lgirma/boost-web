@@ -2,16 +2,22 @@ import {Size} from "./Common";
 
 export interface ModalOptions {
     header?: any
-    content?: any
+    body?: any
     footer?: any
     size?: Size
     hideCloseButton?: boolean
+    id?: string
 }
 
-export type ModalInstance = any
+export type ModalRef = any
+export interface ModalInstance {
+    ref: ModalRef
+    html?: string
+}
 
 export interface ModalDialogService {
-    createModal(options?: ModalOptions, modalInstance?: ModalInstance): ModalInstance
-    showModal(modal: ModalInstance, options?: ModalOptions)
-    hideModal(modal: ModalInstance, options?: ModalOptions)
+    getModal(id: any): ModalRef
+    update(modal: ModalRef, options?: ModalOptions): ModalInstance
+    show(modal: ModalRef)
+    hide(modal: ModalRef)
 }

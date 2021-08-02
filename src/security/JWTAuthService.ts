@@ -1,6 +1,5 @@
-import { SecurityService } from ".";
+import { SecurityService, SimpleAuthService } from ".";
 import {ConfigService, HttpService, NavigationService, User, WebImage} from "..";
-import { SimpleAuthService } from "./AuthService";
 
 export class JWTAuthenticatedUser implements User {
     fullName: string;

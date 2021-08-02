@@ -1,4 +1,6 @@
 export * from './SecurityService'
 export * from './AuthService'
 export * from './Models'
+export * from './SimpleSecurityService'
+export * from './SimpleAuthService'
 export * from './JWTAuthService'

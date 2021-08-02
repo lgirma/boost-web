@@ -4,9 +4,10 @@ import {i18nConfig} from "./i18n";
 import {AuthConfig, SecurityConfig} from "./security";
 
 export interface StaticConfig {
-    app: AppConfig,
-    http?: HttpConfig,
-    i18n?: i18nConfig,
-    security?: SecurityConfig,
+    app: AppConfig
+    http?: HttpConfig
+    i18n?: i18nConfig
+    security?: SecurityConfig
     auth?: AuthConfig
+    [others: string]: any
 }
