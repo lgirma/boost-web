@@ -5,7 +5,7 @@ import {i18nService} from "../i18n";
 import {LoggerService} from "../log";
 import {NavigationService} from "../routing";
 import {SessionStorageService} from "../session";
-import {BusyBarService, PageResourcesService, ToastService} from "../ui";
+import {BusyBarService, ModalDialogService, PageResourcesService, ToastService} from "../ui";
 import {AppService} from "../app";
 import {StringUtils} from "../common";
 
@@ -23,6 +23,7 @@ export type ContainerServices = {
     'string-utils': StringUtils
     'page-resources': PageResourcesService
     toast: ToastService
+    modal: ModalDialogService
     [others: string]: any
 }
 

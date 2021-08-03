@@ -1,51 +1,57 @@
 import {MessageType} from "./Common";
+import {AppEvent} from "../events";
 
-export interface DialogOptions {
-    title?: string
-    body?: string
-    isBodyHtml?: boolean
-    acceptButtonTitle?: string
-    cancelButtonTitle?: string
-    onAccept: () => void
-    onCancel: () => void
-    hideCancelButton?: boolean
-    dontCloseOnAccept?: boolean
+export interface MessageBoxState
+{
+    titleKey: string
+    messageKey: string
+    messageType: MessageType
+    acceptButtonTitleKey: string,
+    isOpen: boolean
+}
+
+const DefaultMessageBoxMessage: MessageBoxState = {
+    titleKey: '',
+    messageKey: 'INFORMATION',
+    messageType: MessageType.INFO,
+    acceptButtonTitleKey: 'OK',
+    isOpen: false
 }
 
 export interface MessageBoxService {
-    showMessage(message: string, messageType?: MessageType, options?: DialogOptions)
-    showConfirm(question?: string, options?: DialogOptions)
-    showError(message: string, options?: DialogOptions)
-    showSuccess(message: string, options?: DialogOptions)
-    showWarning(message: string, options?: DialogOptions)
-    showInfo(message: string, options?: DialogOptions)
-    showConfirmAsync(question?: string, options?: DialogOptions): Promise<boolean>
-    init()
+    showMessage(prevState: MessageBoxState, messageKey: string, messageType?: MessageType, options?: Partial<MessageBoxState>): MessageBoxState
+    showError(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
+    showSuccess(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
+    showWarning(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
+    showInfo(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
 }
 
-export abstract class MessageBoxServiceBase implements MessageBoxService {
-    init() {}
-    abstract showMessage(message: string, messageType?: MessageType, options?: DialogOptions)
-    abstract showConfirm(question?: string, options?: DialogOptions)
-    showError(message: string, options?: DialogOptions) {
-        this.showMessage(message, MessageType.ERROR, options)
+export class MessageBoxStateService implements MessageBoxService {
+    onOpen = new AppEvent<MessageBoxState>()
+
+    showMessage(prevState: MessageBoxState, messageKey: string, messageType?: MessageType, options?: Partial<MessageBoxState>) {
+        const result = {
+            prevState,
+            ...DefaultMessageBoxMessage,
+            messageKey: messageKey ?? DefaultMessageBoxMessage.messageKey,
+            messageType: messageType ?? DefaultMessageBoxMessage.messageType,
+            ...options,
+            isOpen: true
+        }
+        this.onOpen.publish(result)
+        return result
     }
-    showSuccess(message: string, options?: DialogOptions) {
-        this.showMessage(message, MessageType.SUCCESS, options)
+
+    showError(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
+        return this.showMessage(prevState, messageKey, MessageType.ERROR, options)
     }
-    showWarning(message: string, options?: DialogOptions) {
-        this.showMessage(message, MessageType.WARNING, options)
+    showInfo(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
+        return this.showMessage(prevState, messageKey, MessageType.INFO, options)
     }
-    showInfo(message: string, options?: DialogOptions) {
-        this.showMessage(message, MessageType.INFO, options)
+    showSuccess(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
+        return this.showMessage(prevState, messageKey, MessageType.SUCCESS, options)
     }
-    async showConfirmAsync(question?: string, options?: DialogOptions) : Promise<boolean> {
-        return new Promise(
-            (resolve) => this.showConfirm(question,{
-                ...options,
-                onAccept: () => resolve(true),
-                onCancel: () => resolve(false)
-            })
-        );
+    showWarning(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
+        return this.showMessage(prevState, messageKey, MessageType.WARNING, options)
     }
 }

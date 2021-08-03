@@ -3,7 +3,7 @@ import { ToastMessage, ToastService } from "./ToastService";
 
 export class AlertToastService extends ToastService {
     show(options?: ToastMessage) {
-        alert(`${options.title}\n${options.body}`)
+        globalThis.alert(`${options.title}\n${options.body}`)
     }
     hide() { }
 

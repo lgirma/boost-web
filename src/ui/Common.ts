@@ -1,9 +1,9 @@
 export const enum ScreenPosition {
-    TopLeft,
-    TopRight,
-    BottomLeft,
-    BottomRight,
-    Center
+    TOP_LEFT,
+    TOP_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT,
+    CENTER
 }
 
 export const enum MessageType {
