@@ -5,7 +5,7 @@ import {i18nService} from "../i18n";
 import {LoggerService} from "../log";
 import {NavigationService} from "../routing";
 import {SessionStorageService} from "../session";
-import {BusyBarService, ModalDialogService, PageResourcesService, ToastService} from "../ui";
+import {BusyBarService, MessageBoxService, ConfirmDialogService, BusyModalService, PageResourcesService, ToastService} from "../ui";
 import {AppService} from "../app";
 import {StringUtils} from "../common";
 
@@ -23,23 +23,10 @@ export type ContainerServices = {
     'string-utils': StringUtils
     'page-resources': PageResourcesService
     toast: ToastService
-    modal: ModalDialogService
+    'message-box': MessageBoxService
+    'confirm-dialog': ConfirmDialogService
+    'busy-modal': BusyModalService
     [others: string]: any
 }
 
 export type ContainerType = <K extends keyof ContainerServices>(name: K) => ContainerServices[K]
-
-/*
-const container = Container()
-    .add("config", () => (null as ConfigService))
-    .add("i18n", () => (null as i18nService))
-    .add("log", () => (null as LoggerService))
-    .add("nav", () => (null as NavigationService))
-    .add("session", () => (null as SessionStorageService))
-    .add("security", () => (null as SecurityService))
-    .add("auth", () => (null as AuthService))
-    .add("http", () => (null as HttpService))
-    .add("busy-bar", () => (null as BusyBarService))
-    .finish();
-
-export default container;*/

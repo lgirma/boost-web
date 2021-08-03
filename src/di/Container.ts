@@ -6,7 +6,7 @@ interface InjectionInfo<T, P extends keyof T> {
     lazy: boolean
 }
 
-class ContainerBuilder<T extends { [P in keyof T]: any }> {
+export class ContainerBuilder<T extends { [P in keyof T]: any }> {
     public constructor(private provider: { [P in keyof T]: InjectionInfo<T, P> } = {} as any) {
 
     }
@@ -20,7 +20,10 @@ class ContainerBuilder<T extends { [P in keyof T]: any }> {
         const cache: { [name in keyof T]?: any } = {};
         const container = function<K extends keyof T>(name: K) : T[K]  {
             if (!cache[name]) {
-                cache[name] = provider[name].factory(container);
+                const resolved = provider[name]
+                if (resolved == null)
+                    throw `Unresolved dependency: ${name}`
+                cache[name] = resolved.factory(container);
             }
             return cache[name] as any;
         }

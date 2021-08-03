@@ -1,5 +1,7 @@
 import {MessageType} from ".";
 import {AppEvent} from "../events";
+import {i18nService} from "../i18n";
+import {StringUtils} from "../common";
 
 export interface ConfirmDialogState
 {
@@ -28,32 +30,56 @@ const DefaultConfirmDialogState: ConfirmDialogState = {
 }
 
 export interface ConfirmDialogService {
-    showConfirm(prevState: ConfirmDialogState, questionKey?: string, detailKey?: string, options?: Partial<ConfirmDialogState>): ConfirmDialogState
-    showConfirmAsync(prevState: ConfirmDialogState, questionKey?: string, detailKey?: string, options?: Partial<ConfirmDialogState>): Promise<boolean>
+    show(questionKey?: string, detailKey?: string, options?: Partial<ConfirmDialogState>): ConfirmDialogState
+    showAsync(questionKey?: string, detailKey?: string, options?: Partial<ConfirmDialogState>): Promise<boolean>
 }
 
 export class ConfirmDialogStateService implements ConfirmDialogService {
-    onOpen = new AppEvent<ConfirmDialogState>()
+    onToggle = new AppEvent<ConfirmDialogState>()
 
-    showConfirm(prevState: ConfirmDialogState, questionKey?: string, detailKey?: string, options?: Partial<ConfirmDialogState>): ConfirmDialogState {
-        return {
-            ...prevState,
+    show(questionKey?: string, detailKey?: string, options?: Partial<ConfirmDialogState>): ConfirmDialogState {
+        let result = {
             ...DefaultConfirmDialogState,
             questionKey: questionKey ?? DefaultConfirmDialogState.questionKey,
             detailKey: detailKey ?? DefaultConfirmDialogState.detailKey,
             ...options,
             isOpen: true
-        }
+        };
+        this.onToggle.publish(result)
+        return  result
     }
 
-    showConfirmAsync(prevState: ConfirmDialogState, questionKey?: string, detailKey?: string, options?: Partial<ConfirmDialogState>): Promise<boolean> {
+    showAsync(questionKey?: string, detailKey?: string, options?: Partial<ConfirmDialogState>): Promise<boolean> {
         return new Promise(
-            (resolve) => this.showConfirm(prevState, questionKey, detailKey, {
+            (resolve) => this.show(questionKey, detailKey, {
                 ...options,
                 onAccept: () => resolve(true),
                 onDecline: () => resolve(false)
             })
         );
     }
+
+}
+
+export class WebConfirmDialogService implements ConfirmDialogService {
+    show(questionKey?: string, detailKey?: string, options?: Partial<ConfirmDialogState>): ConfirmDialogState {
+        const result = globalThis.confirm(this._i18n._(questionKey) + (this._str.isEmpty(detailKey) ? '' : `\n${this._i18n._(detailKey)}`))
+        if (result)
+            options.onAccept()
+        else options.onDecline()
+        return {...DefaultConfirmDialogState, ...options, questionKey, detailKey, isOpen: true}
+    }
+
+    showAsync(questionKey?: string, detailKey?: string, _1?: Partial<ConfirmDialogState>): Promise<boolean> {
+        return new Promise(
+            (resolve) => this.show(questionKey, detailKey, {
+                ..._1,
+                onAccept: () => resolve(true),
+                onDecline: () => resolve(false)
+            })
+        );
+    }
+
+    constructor(private _i18n: i18nService, private _str: StringUtils) {}
 
 }

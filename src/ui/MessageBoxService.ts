@@ -19,39 +19,38 @@ const DefaultMessageBoxMessage: MessageBoxState = {
 }
 
 export interface MessageBoxService {
-    showMessage(prevState: MessageBoxState, messageKey: string, messageType?: MessageType, options?: Partial<MessageBoxState>): MessageBoxState
-    showError(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
-    showSuccess(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
-    showWarning(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
-    showInfo(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
+    showMessage(messageKey: string, messageType?: MessageType, options?: Partial<MessageBoxState>): MessageBoxState
+    showError(messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
+    showSuccess(messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
+    showWarning(messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
+    showInfo(messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState
 }
 
 export class MessageBoxStateService implements MessageBoxService {
-    onOpen = new AppEvent<MessageBoxState>()
+    onToggle = new AppEvent<MessageBoxState>()
 
-    showMessage(prevState: MessageBoxState, messageKey: string, messageType?: MessageType, options?: Partial<MessageBoxState>) {
+    showMessage(messageKey: string, messageType?: MessageType, options?: Partial<MessageBoxState>) {
         const result = {
-            prevState,
             ...DefaultMessageBoxMessage,
             messageKey: messageKey ?? DefaultMessageBoxMessage.messageKey,
             messageType: messageType ?? DefaultMessageBoxMessage.messageType,
             ...options,
             isOpen: true
         }
-        this.onOpen.publish(result)
+        this.onToggle.publish(result)
         return result
     }
 
-    showError(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
-        return this.showMessage(prevState, messageKey, MessageType.ERROR, options)
+    showError(messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
+        return this.showMessage(messageKey, MessageType.ERROR, options)
     }
-    showInfo(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
-        return this.showMessage(prevState, messageKey, MessageType.INFO, options)
+    showInfo(messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
+        return this.showMessage(messageKey, MessageType.INFO, options)
     }
-    showSuccess(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
-        return this.showMessage(prevState, messageKey, MessageType.SUCCESS, options)
+    showSuccess(messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
+        return this.showMessage(messageKey, MessageType.SUCCESS, options)
     }
-    showWarning(prevState: MessageBoxState, messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
-        return this.showMessage(prevState, messageKey, MessageType.WARNING, options)
+    showWarning(messageKey: string, options?: Partial<MessageBoxState>): MessageBoxState {
+        return this.showMessage(messageKey, MessageType.WARNING, options)
     }
 }

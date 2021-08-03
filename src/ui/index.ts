@@ -1,5 +1,6 @@
 export * from './BusyBar'
 export * from './MessageBoxService'
+export * from './ConfirmDialogService'
 export * from './Common'
 export * from './ToastService'
 export * from './WebDialogServices'
