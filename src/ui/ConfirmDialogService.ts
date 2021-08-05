@@ -5,14 +5,14 @@ import {StringUtils} from "../common";
 
 export interface ConfirmDialogState
 {
-    titleKey: string
-    questionKey: string
-    messageType: MessageType
-    detailKey: string
-    acceptButtonTitleKey: string
-    declineButtonTitleKey: string
-    acceptButtonProps: any,
-    onAccept: () => void,
+    titleKey?: string
+    questionKey?: string
+    messageType?: MessageType
+    detailKey?: string
+    acceptButtonTitleKey?: string
+    declineButtonTitleKey?: string
+    acceptButtonProps?: any,
+    onAccept?: () => void,
     onDecline?: () => void,
     isOpen: boolean
 }

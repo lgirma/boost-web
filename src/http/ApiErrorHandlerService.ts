@@ -1,6 +1,6 @@
 import {ConfigService} from "../config";
 import {HttpConfig, HttpError, HttpErrorType} from ".";
-import {ToastService} from "../ui";
+import {ToastStateService} from "../ui";
 
 export interface ApiError<TDetails = any> {
     code: string
@@ -46,7 +46,7 @@ export class SimpleApiErrorHandlerService implements ApiErrorHandlerService {
         }
     }
 
-    constructor(config: ConfigService, private _toast: ToastService) {
+    constructor(config: ConfigService, private _toast: ToastStateService) {
         this._config = config.get('http', {errorCodeKey: 'code', errorDetailsKey: 'details'})
     }
 }

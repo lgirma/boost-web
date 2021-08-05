@@ -2,7 +2,7 @@ import {AppEvent} from "../events";
 
 export interface BusyModalState
 {
-    titleKey: string
+    titleKey?: string
     isOpen: boolean
 }
 

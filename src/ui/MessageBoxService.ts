@@ -3,10 +3,10 @@ import {AppEvent} from "../events";
 
 export interface MessageBoxState
 {
-    titleKey: string
-    messageKey: string
-    messageType: MessageType
-    acceptButtonTitleKey: string,
+    titleKey?: string
+    messageKey?: string
+    messageType?: MessageType
+    acceptButtonTitleKey?: string,
     isOpen: boolean
 }
 

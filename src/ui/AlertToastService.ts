@@ -1,13 +1,25 @@
-import { i18nService } from "../i18n";
-import { ToastMessage, ToastService } from "./ToastService";
+import {i18nService} from "../i18n";
+import {MessageType, ToastService, ToastState} from ".";
 
-export class AlertToastService extends ToastService {
-    show(options?: ToastMessage) {
-        globalThis.alert(`${options.title}\n${options.body}`)
+export class AlertToastService implements ToastService {
+
+    constructor(private _i18n: i18nService) {}
+
+    hide() {}
+
+    show(detailKey: string, titleKey: string, _: MessageType, _1?: ToastState) {
+        globalThis.alert(`${this._i18n._(titleKey)}\n${this._i18n._(detailKey)}`)
     }
-    hide() { }
-
-    constructor(i18n: i18nService) {
-        super(i18n)
+    showError(messageKey: string, options?: ToastState) {
+        this.show(messageKey, options.titleKey, MessageType.ERROR, options)
+    }
+    showInfo(messageKey: string, options?: ToastState) {
+        this.show(messageKey, options.titleKey, MessageType.INFO, options)
+    }
+    showSuccess(messageKey: string, options?: ToastState) {
+        this.show(messageKey, options.titleKey, MessageType.SUCCESS, options)
+    }
+    showWarning(messageKey: string, options?: ToastState) {
+        this.show(messageKey, options.titleKey, MessageType.WARNING, options)
     }
 }
