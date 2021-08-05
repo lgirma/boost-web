@@ -2,6 +2,9 @@ import {SessionStorageService} from "../session";
 import {ConfigService} from "../config";
 import {i18nConfig, i18nResource, i18nService} from "./i18nService";
 
+const engLocale = {displayName: 'English', key: 'en', shortName: 'En'}
+const userLangKey = 'userLanguage'
+
 export class Simplei18nService implements i18nService {
     _dictionary = {}
     _currentLang: string
@@ -16,25 +19,25 @@ export class Simplei18nService implements i18nService {
         let result = resource[key];
         if (result === undefined && currLang != this._config.defaultLocale)
             result = this._config.translations[this._config.defaultLocale][key];
-        for (let i=0; i<args.length; i++) {
+        for (let i = 0; i < args.length; i++) {
             result = result.replace(`{${i}}`, args[i]);
         }
         return result ?? key;
     }
 
     changeLanguage(lang: string) {
-        this._sessionStorage.setItem('userLanguage', lang);
+        this._sessionStorage.setItem(userLangKey, lang);
         this._currentLang = lang;
     }
 
     getCurrentUserLanguage(): string {
         return this._currentLang
-            ?? (this._currentLang = this._sessionStorage.getItem('userLanguage') || this._config.defaultLocale || 'en');
+            ?? (this._currentLang = this._sessionStorage.getItem(userLangKey) || this._config.defaultLocale || engLocale.key);
     }
 
     addTranslations(res: i18nResource) {
         const langKeys = Object.keys(res);
-        for (let i=0; i<langKeys.length; i++) {
+        for (let i = 0; i < langKeys.length; i++) {
             const langKey = langKeys[i];
             let translations = this._config.translations[langKey];
             if (translations == null)
@@ -47,13 +50,15 @@ export class Simplei18nService implements i18nService {
 
     constructor(configService: ConfigService, sessionStorage: SessionStorageService) {
         this._config = configService.get('i18n', {
-            defaultLocale: 'en',
-            locales: [
-                {displayName: 'English', key: 'en', shortName: 'En'}
-            ],
+            defaultLocale: engLocale.key,
+            locales: [engLocale],
             translations: {en: {}}
         })
         this._sessionStorage = sessionStorage
-        this.changeLanguage(this._config.defaultLocale)
+        this.changeLanguage(this._sessionStorage.getItem(userLangKey) ?? this._config.defaultLocale)
+    }
+
+    getLanguages() {
+        return this._config.locales
     }
 }

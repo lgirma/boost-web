@@ -41,4 +41,5 @@ export interface i18nService {
     changeLanguage(lang: string);
     _(key: string, ...args): string
     addTranslations(res: i18nResource)
+    getLanguages(): WebLocale[]
 }
