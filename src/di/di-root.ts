@@ -1,5 +1,5 @@
 import {ConfigService} from "../config";
-import {HttpService} from "../http";
+import {ApiErrorHandlerService, HttpService} from "../http";
 import {AuthService, SecurityService} from "../security";
 import {i18nService} from "../i18n";
 import {LoggerService} from "../log";
@@ -19,6 +19,7 @@ export type ContainerServices = {
     security: SecurityService
     auth: AuthService
     http: HttpService
+    'api-error': ApiErrorHandlerService
     'busy-bar': BusyBarService
     'string-utils': StringUtils
     'page-resources': PageResourcesService

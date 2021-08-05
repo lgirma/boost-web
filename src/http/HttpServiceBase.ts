@@ -33,10 +33,13 @@ export abstract class HttpServiceBase implements HttpService {
     abstract request(method: HttpMethod, url: string, body?: any, config?: RequestInit): Promise<Response>
 
     protected constructor(configService: ConfigService) {
-        this._config = configService.get<HttpConfig>('http', {apiBaseUrl: ''})
+        this._config = configService.get<HttpConfig>('http',
+            {apiBaseUrl: ''})
     }
 }
 
 export interface HttpConfig {
     apiBaseUrl?: string
+    errorCodeKey?: string
+    errorDetailsKey?: string
 }

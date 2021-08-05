@@ -6,10 +6,12 @@ Abstractions:
 
 * `HttpService`
 * `HttpServiceBase`
+* `ApiErrorHandlerService`
   
 Implementations:
 
 * `FetchHttpService`
+* `SimpleApiErrorHandlerService`
 
 ## Configuration
 

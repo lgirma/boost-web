@@ -1,32 +1,31 @@
-const isObject = (item: any): boolean => {
+const isObj = (item: any): boolean => {
     return item !== null && typeof item === 'object';
-};
+}
 
-const isMergeAbleObject = (item): boolean => {
-    return isObject(item) && !Array.isArray(item);
-};
+const isMergeAble = (item): boolean => {
+    return isObj(item) && !Array.isArray(item);
+}
 
-export function mergeObjects<T extends object = object>(target: T, ...sources: T[]): T {
-    if (!sources.length) {
+export function deepMerge<T extends object = object>(target: T, ...sources: T[]): T {
+    if (!sources.length)
         return target;
-    }
+
     const source = sources.shift();
-    if (source === undefined) {
+    if (source === undefined)
         return target;
-    }
 
-    if (isMergeAbleObject(target) && isMergeAbleObject(source)) {
+    if (isMergeAble(target) && isMergeAble(source)) {
         Object.keys(source).forEach(function(key: string) {
-            if (isMergeAbleObject(source[key])) {
+            if (isMergeAble(source[key])) {
                 if (!target[key]) {
                     target[key] = {};
                 }
-                mergeObjects(target[key], source[key]);
+                deepMerge(target[key], source[key]);
             } else {
                 target[key] = source[key];
             }
         });
     }
 
-    return mergeObjects(target, ...sources);
+    return deepMerge(target, ...sources);
 }

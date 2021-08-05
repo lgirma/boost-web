@@ -1,6 +1,24 @@
-import { ConfigService } from "../config";
-import {HttpMethod} from "./HttpService";
+import {ConfigService} from "../config";
+import {HttpError, HttpErrorType, HttpMethod} from "./HttpService";
 import {HttpServiceBase} from "./HttpServiceBase";
+
+function httpError(type: HttpErrorType, status?: number, body?: any): HttpError {
+    const result = {type, status, body, isHandleable: false}
+    result.isHandleable = (body && type == HttpErrorType.ERR_4XX)
+    return result
+}
+
+async function httpErrorFromResp(response: Response): Promise<HttpError> {
+    let type = HttpErrorType.ERR_4XX
+    if (response.status >= 500)
+        type = HttpErrorType.ERR_5XX
+    else if (response.status == 404)
+        type = HttpErrorType.ERR_404
+    let body: any = null
+    try {body = await response.json()}
+    catch {}
+    return httpError(type, response.status, body)
+}
 
 export class FetchHttpService extends HttpServiceBase {
     async request(method: HttpMethod, url: string, body?: any, config?: RequestInit): Promise<Response> {
@@ -29,21 +47,21 @@ export class FetchHttpService extends HttpServiceBase {
                 response = await fetch(`${baseUrl}${url}`, config);
             } catch (err) {
                 this.onResponseError.publish(err)
-                throw err;
+                throw httpError(HttpErrorType.NO_CONNECTION)
             }
             if (!response.ok) {
                 this.onResponseNotOk.publish(response)
-                throw response
+                throw await httpErrorFromResp(response)
             }
             this.onResponseSuccess.publish(config)
             return response
         }
         else {
-            throw 'fetch is not defined'
+            throw httpError(HttpErrorType.ERR_REQUEST, null, 'Fetch is not defined')
         }
     }
     
-    constructor(protected _configService: ConfigService) {
-        super(_configService)
+    constructor(config: ConfigService) {
+        super(config)
     }
 }
