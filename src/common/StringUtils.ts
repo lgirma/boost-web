@@ -6,6 +6,7 @@ export interface StringUtils {
     humanize(str: string): string
     getFriendlyFileSize(bytes: number): string
     randomHash(): string
+    fmt(str: string, ...args: any[]): string
 }
 
 export class DefaultStringUtils implements StringUtils {
@@ -41,6 +42,13 @@ export class DefaultStringUtils implements StringUtils {
             return Math.round(10* bytes / (1024**3))/10 + ' ' + this._i18n._('GB')
         else
             return Math.round(10* bytes / (1024**4))/10 + ' ' + this._i18n._('TB')
+    }
+    fmt(str: string, ...args: any[]) {
+        let result = str
+        for (let i = 0; i < args.length; i++) {
+            result = result.replace(`{${i}}`, args[i]);
+        }
+        return result
     }
 
     constructor(private _i18n: i18nService) {}

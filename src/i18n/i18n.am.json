@@ -1,0 +1,22 @@
+{
+  "ERR_VALIDATION_EMPTY_FIELD": "እባክዎ፣ ይህንን ባዶ ቦታ ይሙሉ",
+  "ERR_VALIDATION_MIN_LENGTH": "ቢያንስ {0} ፊደላት ይጻፉ",
+  "ERR_VALIDATION_NAME": "እባክዎ፣ ተገቢ ስም ይሙሉ",
+  "ERR_VALIDATION_FILES": "እባክዎ፣ ተገቢ ፋይሎችን ብቻ ይስቀሉ",
+  "ERR_VALIDATION_IMAGES": "እባክዎ፣ ሥዕል ብቻ ይስቀሉ",
+  "ERR_VALIDATION_FILE_SIZE": "እባክዎ፣ ከ {0} የማይበልጥ ፋይል ይስቀሉ",
+  "ERR_VALIDATION_PASSWORD_LEN": "የምሥጢር ቍልፍ ቢያንስ {0} ፊደላት ያስፈልጉታል",
+  "ERR_VALIDATION_PASSWORD_CASE": "የምሥጢር ቍልፍ ቢያንስ 1 ትንሽ፣ 1 ትልቅ ፊደላት ያስፈልጉታል",
+  "ERR_VALIDATION_PASSWORD_SPECIAL_CHAR": "የምሥጢር ቍልፍ ቢያንስ 1 ልዩ ፊደል ያስፈልገዋል (*!@#$%^&*)",
+
+  "ERR_HTTP_REQUEST": "ይቅርታ፣ አንዳንድ የውስጥ ችግሮች አጋጥመውናል፤ ይህ ችግር የሚደጋገም ከሆነ ለበላይ አካል ያሳውቁ (ERR_HTTP_REQUEST)",
+  "ERR_HTTP_NO_CONNECTION":  "ከሰርቨራችን ጋር መገናኘት አልቻልንም፤ የዚህ ኮምፒዩተር ኔትዎርክ በትክክል መሥራቱን ያረጋግጡ።",
+  "ERR_HTTP_404": "ይቅርታ፣ አንዳንድ የውስጥ ችግሮች አጋጥመውናል፤ ይህ ችግር የሚደጋገም ከሆነ ለበላይ አካል ያሳውቁ (ERR_HTTP_404)",
+  "ERR_HTTP_5XX":  "ይቅርታ፣ አንዳንድ የውስጥ ችግሮች አጋጥመውናል፤ ይህ ችግር የሚደጋገም ከሆነ ለበላይ አካል ያሳውቁ (ERR_HTTP_5XX)",
+  "ERR_HTTP_GENERIC": "ይቅርታ፣ አንዳንድ የውስጥ ችግሮች አጋጥመውናል፤ ይህ ችግር የሚደጋገም ከሆነ ለበላይ አካል ያሳውቁ (ERR_HTTP_GENERIC)",
+
+  "INFORMATION": "መረጃ",
+  "SUCCESS": "ተሳክቷል",
+  "FAILED": "አልተሳካም",
+  "WARNING": "ማስጠንቀቂያ"
+}

@@ -1,0 +1,22 @@
+{
+  "ERR_VALIDATION_EMPTY_FIELD": "Please, fill out this field.",
+  "ERR_VALIDATION_MIN_LENGTH": "Should have at least {0} characters.",
+  "ERR_VALIDATION_NAME": "Please, enter a valid name.",
+  "ERR_VALIDATION_FILES": "Please, upload valid files only.",
+  "ERR_VALIDATION_IMAGES": "Please, upload images only.",
+  "ERR_VALIDATION_FILE_SIZE": "Please, upload a file no bigger than {0}.",
+  "ERR_VALIDATION_PASSWORD_LEN": "Password should have at least {0} characters.",
+  "ERR_VALIDATION_PASSWORD_CASE": "Password should have at least 1 capital and 1 small letter.",
+  "ERR_VALIDATION_PASSWORD_SPECIAL_CHAR": "Password should have at least one special character (*!@#$%^&*).",
+
+  "ERR_HTTP_REQUEST": "We're having internal issues; If this problem persists contact your sys admin (ERR_HTTP_REQUEST).",
+  "ERR_HTTP_NO_CONNECTION":  "We're having issues reaching our server. Make sure you have your network setup correctly.",
+  "ERR_HTTP_404": "We're having internal issues; If this problem persists contact your sys admin (ERR_HTTP_404).",
+  "ERR_HTTP_5XX":  "We're having internal issues; If this problem persists contact your sys admin (ERR_HTTP_5XX).",
+  "ERR_HTTP_GENERIC": "We're having internal issues; If this problem persists contact your sys admin (ERR_HTTP_GENERIC).",
+
+  "INFORMATION": "Information",
+  "SUCCESS": "Success",
+  "FAILED": "Failed",
+  "WARNING": "Warning"
+}

@@ -5,7 +5,15 @@ import {i18nService} from "../i18n";
 import {LoggerService} from "../log";
 import {NavigationService} from "../routing";
 import {SessionStorageService} from "../session";
-import {BusyBarService, MessageBoxService, ConfirmDialogService, BusyModalService, PageResourcesService, ToastService} from "../ui";
+import {
+    BusyBarService,
+    MessageBoxService,
+    ConfirmDialogService,
+    BusyModalService,
+    PageResourcesService,
+    ToastService,
+    FormService, ValidationService
+} from "../ui";
 import {AppService} from "../app";
 import {StringUtils} from "../common";
 
@@ -27,7 +35,9 @@ export type ContainerServices = {
     'message-box': MessageBoxService
     'confirm-dialog': ConfirmDialogService
     'busy-modal': BusyModalService
-    [others: string]: any
+    [others: string]: any,
+    form: FormService
+    validation: ValidationService
 }
 
 export type ContainerType = <K extends keyof ContainerServices>(name: K) => ContainerServices[K]
