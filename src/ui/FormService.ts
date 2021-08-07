@@ -3,10 +3,11 @@ import {
     FormConfig,
     FormFieldType,
     FormValidationResult, PartialFieldConfig,
-    PartialFormConfig,
+    PartialFormConfig, SyncFormValidateFunc, SyncValidateFunc,
     ValidationResult
 } from "./FormModels";
-import {Nullable, Dict, StringUtils, isDate, isDateTime, isTime, isYear} from '../common'
+import {Nullable, Dict, StringUtils, isDate, isDateTime, isTime, isYear, toArray} from '../common'
+import {ValidationService} from "./ValidationService";
 
 export interface FormService {
     getValidationResult(errorMessage?: string): ValidationResult
@@ -19,6 +20,7 @@ export interface FormService {
     guessConfig(val: any, fieldType: FormFieldType, _?: PartialFieldConfig): PartialFieldConfig
     getGroupedFields(fieldsConfig: Dict<FieldConfig>): Dict<Dict<FieldConfig>>
     hasGroups(form: FormConfig): boolean
+    validate(forObject: any, formConfig: FormConfig) : FormValidationResult
 }
 
 export class SimpleFormService implements FormService {
@@ -201,5 +203,43 @@ export class SimpleFormService implements FormService {
             .length > 1;
     }
 
-    constructor(protected _str: StringUtils) {}
+    validate(forObject: any, formConfig: FormConfig): FormValidationResult {
+        let result = this.getFormValidationResult(null,
+            Object.keys(formConfig.fieldsConfig).reduce((prev, fldId) => ({...prev, [fldId]: this.getValidationResult()}), {}))
+        const frmValidateFuncs = toArray<SyncFormValidateFunc>(formConfig.validate as any)
+        for (const validate of frmValidateFuncs) {
+            const vr = validate(forObject)
+            if (this._str.isEmpty(vr))
+                continue
+            if (typeof vr === 'string') {
+                result.hasError = true
+                result.message = vr
+            }
+            else {
+                Object.keys(vr).map(fldId => {
+                    result.fields[fldId] = this.getValidationResult(vr[fldId])
+                })
+            }
+            break
+        }
+        for (const [fldId, conf] of Object.entries(formConfig.fieldsConfig)) {
+            const validators = toArray<SyncValidateFunc>(conf.validate as any)
+            for (const validate of validators) {
+                const vr = validate(forObject[fldId])
+                result.fields[fldId] = this.getValidationResult(vr)
+                if (result.fields[fldId].hasError)
+                    break
+            }
+            if (!result.fields[fldId].hasError) {
+                if (conf.required) {
+                    result.fields[fldId] = this.getValidationResult(this._validation.notEmpty(forObject[fldId]))
+                }
+            }
+        }
+        result.hasError = result.hasError ||
+            Object.keys(result.fields).reduce((prev, id) => prev || result.fields[id].hasError, false)
+        return result
+    }
+
+    constructor(protected _str: StringUtils, protected _validation: ValidationService) {}
 }

@@ -70,6 +70,7 @@ type ValidationFunc<T = string> = (val: any, errorMessage?: string) => T|null|un
 export type AsyncValidateFunc = ValidationFunc<Promise<string>>
 export type SyncValidateFunc = ValidationFunc
 export type ValidateFunc = Nullable<SyncValidateFunc | AsyncValidateFunc>
+export type SyncFormValidateFunc = Nullable<ValidationFunc<string | Dict<string>>>
 export type FormValidateFunc = Nullable<ValidationFunc<Promise<string> | string | Dict<string> | Promise<Dict<string>>>>
 
 /*export interface WebFormEvents {

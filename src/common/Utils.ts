@@ -57,3 +57,10 @@ export function isYear(str: string){
     const _regExp  = new RegExp('^[1-2][0-9][0-9][0-9]$');
     return _regExp.test(str);
 }
+
+export function toArray<T>(src: T|T[]|null): T[] {
+    if (src == null) return []
+    if (Array.isArray(src))
+        return src;
+    else return [src]
+}

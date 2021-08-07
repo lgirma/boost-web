@@ -25,7 +25,7 @@ services.add('config', () => new SimpleConfigService(config))
     .add('confirm-dialog', () => new ConfirmDialogStateService())
     .add('busy-modal', () => new BusyModalStateService())
     .add('toast', () => new ToastStateService())
-    .add('form', c => new SimpleFormService(c('string-utils')))
+    .add('form', c => new SimpleFormService(c('string-utils'), c('validation')))
     .add('validation', c => new SimpleValidationService(c('string-utils')))
     .add('api-error', c => new SimpleApiErrorHandlerService(c('config'), c('toast')))
 }
