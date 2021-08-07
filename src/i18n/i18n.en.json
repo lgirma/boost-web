@@ -18,5 +18,7 @@
   "INFORMATION": "Information",
   "SUCCESS": "Success",
   "FAILED": "Failed",
-  "WARNING": "Warning"
+  "WARNING": "Warning",
+
+  "MISC": "Miscellaneous"
 }

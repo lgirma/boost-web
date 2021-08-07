@@ -17,6 +17,8 @@ export interface FormService {
     getDefaultFieldConfig(fieldId: string, type: FormFieldType, formConfig?: PartialFormConfig): FieldConfig
     guessType(fieldId: string, fieldValue: any): FormFieldType
     guessConfig(val: any, fieldType: FormFieldType, _?: PartialFieldConfig): PartialFieldConfig
+    getGroupedFields(fieldsConfig: Dict<FieldConfig>): Dict<Dict<FieldConfig>>
+    hasGroups(form: FormConfig): boolean
 }
 
 export class SimpleFormService implements FormService {
@@ -40,9 +42,10 @@ export class SimpleFormService implements FormService {
         _config ??= {}
         let config: FormConfig = {
             scale: 1,
+            columns: 1,
             readonly: false,
             hideLabels: false,
-            excludeSubmitButton: false,
+            includeSubmitButton: false,
             autoValidate: true,
             noValidate: true,
             ..._config,
@@ -53,7 +56,7 @@ export class SimpleFormService implements FormService {
             $$isComplete: true
         }
 
-        if (!config.excludeSubmitButton) {
+        if (config.includeSubmitButton) {
             config.fieldsConfig['$$submit'] = {
                 ...this.getDefaultFieldConfig('$$submit', 'submit', config),
                 hideLabel: true,
@@ -80,9 +83,8 @@ export class SimpleFormService implements FormService {
             ...this.guessConfig(fieldValue, type, fieldConfig),
             ...fieldConfig,
         } as FieldConfig
-        if (this._str.isEmpty(result.label)) {
+        if (this._str.isEmpty(result.label))
             result.label = this._str.humanize(fieldId)
-        }
         result.choices = (result?.choices == null
             ? {}
             : (result.choices?.constructor === Array
@@ -168,6 +170,35 @@ export class SimpleFormService implements FormService {
         if (fieldType == 'password')
             result.required = true
         return result
+    }
+
+    getGroupedFields(fields: Dict<FieldConfig>): Dict<Dict<FieldConfig>> {
+        return Object.keys(fields)
+            .reduce((prev, fld) => {
+                let grp = fields[fld].group ?? 'MISC'
+                if (prev[grp])
+                    prev[grp][fld] = fields[fld]
+                else prev[grp] = {[fld]: fields[fld]}
+                return prev
+            }, {})
+    }
+
+    getColumns(fields: Dict<FieldConfig>, cols = 1): Dict<FieldConfig>[] {
+        const fKeys = Object.keys(fields)
+        if (cols < 1) cols = 1
+        let result = new Array(cols).fill(0).map(_ => ({} as Dict<FieldConfig>))
+        for (let i=0; i<fKeys.length; i++) {
+            const at = Math.floor(i / (fKeys.length / cols))
+            result[at][fKeys[i]] = fields[fKeys[i]]
+        }
+        return result
+    }
+
+    hasGroups(form: FormConfig): boolean {
+        let fConf = form.fieldsConfig
+        return Object.keys(fConf)
+            .reduce((prev, fld) => (prev.indexOf(fConf[fld].group) > -1 ? prev : [...prev, fConf[fld].group]), [])
+            .length > 1;
     }
 
     constructor(protected _str: StringUtils) {}

@@ -29,13 +29,14 @@ export interface FormConfig extends Partial<HTMLFormElement>/*, WebFormEvents*/ 
     fieldsConfig: FieldsConfig
     validate?: OneOrMany<FormValidateFunc>
     scale?: number
+    columns?: number
     hideLabels?: boolean
     readonly?: boolean
     validationResult?: FormValidationResult
     /**
      * Do not include a default submit button
      */
-    excludeSubmitButton?: boolean
+    includeSubmitButton?: boolean
     /**
      * If true, should render a <div> or similar panel instead of a <formConfig>
      */
