@@ -18,7 +18,7 @@ const DefaultToastState: ToastState = {
     isDetailHtml: false,
     isOpen: false,
     position: ScreenPosition.TOP_LEFT,
-    timeout: 3000,
+    timeout: 10000,
     titleKey: '',
     type: MessageType.INFO
 }
@@ -36,6 +36,7 @@ export class ToastStateService implements ToastService {
     onToggle = new AppEvent<ToastState>()
 
     show(detailKey: string, titleKey: string, type: MessageType, options?: ToastState): ToastState {
+        this.hide()
         const result = {
             ...DefaultToastState,
             ...options,

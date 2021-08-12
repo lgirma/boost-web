@@ -7,7 +7,7 @@ import {
     SimpleAppService,
     SimpleConfigService, Simplei18nService, SimpleSecurityService, StaticConfig, WebPageResourcesService,
     WindowNavigationService,
-    ToastStateService, SimpleFormService, SimpleValidationService
+    ToastStateService, SimpleFormService, SimpleValidationService, DataTableStateService
 } from "..";
 
 export function SetupDefaultServices(services: ContainerBuilder<any>, config?: Partial<StaticConfig>) {
@@ -28,4 +28,5 @@ services.add('config', () => new SimpleConfigService(config))
     .add('form', c => new SimpleFormService(c('string-utils'), c('validation')))
     .add('validation', c => new SimpleValidationService(c('string-utils')))
     .add('api-error', c => new SimpleApiErrorHandlerService(c('config'), c('toast')))
+    .add('data-table', c => new DataTableStateService(c('form'), c('string-utils')))
 }

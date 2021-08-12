@@ -12,7 +12,8 @@ import {
     BusyModalService,
     PageResourcesService,
     ToastService,
-    FormService, ValidationService
+    FormService, ValidationService,
+    DataTableService
 } from "../ui";
 import {AppService} from "../app";
 import {StringUtils} from "../common";
@@ -38,6 +39,7 @@ export type ContainerServices = {
     [others: string]: any,
     form: FormService
     validation: ValidationService
+    'data-table': DataTableService
 }
 
 export type ContainerType = <K extends keyof ContainerServices>(name: K) => ContainerServices[K]

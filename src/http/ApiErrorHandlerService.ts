@@ -24,7 +24,7 @@ export class SimpleApiErrorHandlerService implements ApiErrorHandlerService {
 
     handle(error: HttpError, handler: (apiError: ApiError) => void, defaultHandler?: (httpError: HttpError) => void): void {
         if (error.isHandleable && error.body[this._config.errorCodeKey])
-            handler(this.getApiError(error))
+            handler(this.getApiError(error.body))
         else if (defaultHandler)
             defaultHandler(error)
         else {
