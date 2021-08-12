@@ -4,6 +4,7 @@ export interface StringUtils {
     uuid(): string
     isEmpty(str: any): boolean
     humanize(str: string): string
+    humanized_i18n(str: string): string
     getFriendlyFileSize(bytes: number): string
     randomHash(): string
     fmt(str: string, ...args: any[]): string
@@ -19,6 +20,16 @@ export class DefaultStringUtils implements StringUtils {
             .replace(/^[a-z]/, function(m) { return m.toUpperCase(); })
             .trim();
     }
+    humanized_i18n(str: string): string {
+        if (this.isEmpty(str))
+            return ''
+        const humanized = this.humanize(str)
+        const key = humanized.replaceAll(/\s/g, '_').toUpperCase()
+        let val = this._i18n._(key)
+        if (val !== key) return val
+        return humanized
+    }
+
     isEmpty(str: any) {
         return str == null || (str.trim && str.trim().length == 0);
     }
