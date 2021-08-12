@@ -24,7 +24,7 @@ export interface SortInfo { by: string, desc?: boolean }
 export interface DataTableFilter {
     currentPage: number
     pageSize: number
-    sortBy: SortInfo[]
+    sort: SortInfo[]
 }
 
 export interface TableData {
@@ -35,6 +35,13 @@ export interface TableData {
 
 export interface DataTableDataSource {
     getRows(filter: DataTableFilter): Promise<TableData>
+}
+
+export interface DataTablePagination {
+    canGoFirst: boolean
+    canGoPrev: boolean
+    canGoNext: boolean
+    canGoLast: boolean
 }
 
 export class ConstDataSource implements DataTableDataSource {
