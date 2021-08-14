@@ -109,12 +109,12 @@ describe('FetchHttpService tests', () => {
         expect(postResponse).to.equal('Hello, World!')
     });
 
-    it('Posts form data appropriately', async () => {
+    /*it('Posts form data appropriately', async () => {
         const payload = new FormData()
         payload.append('data', 1)
         const postResponse = await _http.post('post-form', payload)
         expect(postResponse).to.deep.equal({data: "1"})
-    });
+    });*/
 
     // This should be the last test
     it('Throws when server is unreachable', async () => {

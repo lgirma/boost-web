@@ -1,6 +1,6 @@
 import {configFor, i18nConfig, Simplei18nService} from "../src";
-import { describe } from 'mocha';
 import {GetMockConfigService, GetMockSessionStorageService} from "./Mocks";
+import { describe } from 'mocha';
 // @ts-ignore
 const chai = require('chai');
 const expect = chai.expect;
