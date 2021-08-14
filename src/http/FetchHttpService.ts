@@ -1,6 +1,7 @@
 import {ConfigService} from "../config";
 import {HttpError, HttpErrorType, HttpMethod} from "./HttpService";
 import {HttpServiceBase} from "./HttpServiceBase";
+import {tryReadBody} from "./HttpUtils";
 
 function httpError(type: HttpErrorType, status?: number, body?: any): HttpError {
     const result = {type, status, body, isHandleable: false}
@@ -14,10 +15,7 @@ async function httpErrorFromResp(response: Response): Promise<HttpError> {
         type = HttpErrorType.ERR_5XX
     else if (response.status == 404)
         type = HttpErrorType.ERR_404
-    let body: any = null
-    try {body = await response.json()}
-    catch {}
-    return httpError(type, response.status, body)
+    return httpError(type, response.status, await tryReadBody(response))
 }
 
 export class FetchHttpService extends HttpServiceBase {
@@ -29,7 +27,7 @@ export class FetchHttpService extends HttpServiceBase {
         body ??= config.body
         if (body != null) {
             if (body.constructor === globalThis.FormData) {
-                config.headers['Content-Type'] = 'multipart/form-data'
+                config.headers['Content-Type'] = undefined
                 config.body = body
             }
             else {

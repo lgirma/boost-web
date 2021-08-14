@@ -40,7 +40,7 @@ export class DataTableStateService implements DataTableService {
             result.columns[key] = {
                 type: config.type,
                 id: config.id,
-                header: this._str.humanized_i18n(config.label),
+                header: this._str.humanized_i18n(key),
                 hidden: false,
                 isHeaderHtml: false,
                 sortable: true,

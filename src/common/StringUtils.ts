@@ -16,7 +16,7 @@ export class DefaultStringUtils implements StringUtils {
         return str
             .replace(/^[\s_]+|[\s_]+$/g, '')
             .replace(/[_\s]+/g, ' ')
-            .replace(/([A-Z])/g, ' $1')
+            .replace(/(\S)([A-Z])/g, '$1 $2')
             .replace(/^[a-z]/, function(m) { return m.toUpperCase(); })
             .trim();
     }
@@ -24,7 +24,7 @@ export class DefaultStringUtils implements StringUtils {
         if (this.isEmpty(str))
             return ''
         const humanized = this.humanize(str)
-        const key = humanized.replaceAll(/\s/g, '_').toUpperCase()
+        const key = humanized.replace(/\s/g, '_').toUpperCase()
         let val = this._i18n._(key)
         if (val !== key) return val
         return humanized

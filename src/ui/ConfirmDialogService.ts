@@ -1,4 +1,4 @@
-import {MessageType} from ".";
+import {MessageType} from "./Common";
 import {AppEvent} from "../events";
 import {i18nService} from "../i18n";
 import {StringUtils} from "../common";

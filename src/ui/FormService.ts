@@ -7,7 +7,7 @@ import {
     ValidationResult
 } from "./FormModels";
 import {Nullable, Dict, StringUtils, isDate, isDateTime, isTime, isYear, toArray} from '../common'
-import {ValidationService} from "./ValidationService";
+import {notEmpty} from "./ValidationService";
 
 export interface FormService {
     getValidationResult(errorMessage?: string): ValidationResult
@@ -87,11 +87,18 @@ export class SimpleFormService implements FormService {
         } as FieldConfig
         if (this._str.isEmpty(result.label))
             result.label = this._str.humanize(fieldId)
-        result.choices = (result?.choices == null
-            ? {}
-            : (result.choices?.constructor === Array
-                ? (result.choices as string[]).reduce((acc, b) => ({...acc, [b]: b}), {})
-                : result.choices))
+        if (result?.choices == null)
+            result.choices = []
+        else if (result.choices?.constructor === Array) {
+            if (result.choices.length == 0)
+                result.choices = []
+            else if (typeof result.choices[0] === 'string') {
+                result.choices = result.choices.map(c => ({value: c, label: c}))
+            }
+        }
+        else {
+            Object.keys(result.choices).map(c => ({value: c, label: result.choices[c]}))
+        }
 
         return result
     }
@@ -166,7 +173,7 @@ export class SimpleFormService implements FormService {
     guessConfig(val: any, fieldType: FormFieldType, _?: PartialFieldConfig): PartialFieldConfig {
         let result: Partial<FieldConfig> = {}
         if (val != null && val.constructor === Array && fieldType == 'radio') {
-            result.choices = val.reduce((acc, el) => ({...acc, [el]: this._str.humanize(el)}), {})
+            result.choices = val.map(c => ({value: c, label: this._str.humanize(c)})) //val.reduce((acc, el) => ({...acc, [el]: this._str.humanize(el)}), {})
             result.multiple = true
         }
         if (fieldType == 'password')
@@ -232,7 +239,7 @@ export class SimpleFormService implements FormService {
             }
             if (!result.fields[fldId].hasError) {
                 if (conf.required) {
-                    result.fields[fldId] = this.getValidationResult(this._validation.notEmpty(forObject[fldId]))
+                    result.fields[fldId] = this.getValidationResult(notEmpty(forObject[fldId]))
                 }
             }
         }
@@ -241,5 +248,5 @@ export class SimpleFormService implements FormService {
         return result
     }
 
-    constructor(protected _str: StringUtils, protected _validation: ValidationService) {}
+    constructor(protected _str: StringUtils) {}
 }

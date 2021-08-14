@@ -12,7 +12,7 @@ import {
     BusyModalService,
     PageResourcesService,
     ToastService,
-    FormService, ValidationService,
+    FormService,
     DataTableService
 } from "../ui";
 import {AppService} from "../app";
@@ -38,7 +38,6 @@ export type ContainerServices = {
     'busy-modal': BusyModalService
     [others: string]: any,
     form: FormService
-    validation: ValidationService
     'data-table': DataTableService
 }
 

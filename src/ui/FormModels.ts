@@ -2,6 +2,11 @@ import {Dict, OneOrMany, Nullable} from "../common";
 
 export type FieldsConfig = Record<string, FieldConfig>
 
+export interface FieldChoice {
+    value: any
+    label: string
+}
+
 export interface FieldConfig extends Partial<HTMLInputElement> {
     id: string
     icon?: string
@@ -16,7 +21,7 @@ export interface FieldConfig extends Partial<HTMLInputElement> {
     customOptions?: any,
     maxlength?: string
     multiple?: boolean
-    choices: string[] | Dict<string>
+    choices: string[] | Dict<string> | FieldChoice[]
     variation?: string
     hideLabel: boolean
     scale: number

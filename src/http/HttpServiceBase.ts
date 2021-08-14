@@ -1,17 +1,7 @@
 import {AppEvent} from "../events";
 import {ConfigService} from "../config";
 import {HttpMethod, HttpService} from "./HttpService";
-
-async function getContent(response: Response) {
-    const txtResponse = await response.text()
-    if (txtResponse == null)
-        return null
-    try {
-        return JSON.parse(txtResponse)
-    } catch (e) {
-        return txtResponse as any
-    }
-}
+import {tryReadBody} from "./HttpUtils";
 
 export abstract class HttpServiceBase implements HttpService {
     onRequesting = new AppEvent<RequestInit>()
@@ -22,12 +12,12 @@ export abstract class HttpServiceBase implements HttpService {
 
     async get<T = any>(url: string, config?: RequestInit): Promise<T> {
         const response = await this.request('get', url, null, config)
-        return await getContent(response)
+        return await tryReadBody(response)
     }
 
     async post<T = any>(url: string, body: any, config?: RequestInit): Promise<T> {
         const response = await this.request('post', url, body, config)
-        return await getContent(response)
+        return await tryReadBody(response)
     }
 
     abstract request(method: HttpMethod, url: string, body?: any, config?: RequestInit): Promise<Response>

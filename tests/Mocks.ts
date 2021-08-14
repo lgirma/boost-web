@@ -1,4 +1,7 @@
-import {ConfigService, HttpService, SecurityService, User, NavigationService, HttpMethod, WebImage, AppService, AppConfig} from "../src";
+import {
+    ConfigService, HttpService, SecurityService, User, NavigationService,
+    HttpMethod, WebImage, AppService, AppConfig, i18nService, WebLocale, i18nResource
+} from "../src";
 import {SessionStorageService} from "../src";
 
 export function GetMockConfigService(initialConfig: any = {}): ConfigService {
@@ -115,6 +118,21 @@ export function GetMockHttpService(urlRoute?: (url: string, body?: any) => any):
         }
 
     }
+}
+
+export function GetMock_i18nService(res: i18nResource, defaultLang = 'en'): i18nService {
+    const result = {
+        _res: res,
+        _currLang: defaultLang,
+        getLanguages(): WebLocale[] {return []},
+        _(key: string, ..._): string {
+            return this._res[this._currLang][key] ?? key
+        },
+        changeLanguage(lang: string) {this._currLang = lang},
+        getCurrentUserLanguage(): string {return this._currLang},
+        addTranslations(_: i18nResource) {}
+    }
+    return result
 }
 
 export function getUser(name: string, fullName: string, roles: string[], primaryRole?: string): User {

@@ -4,6 +4,13 @@ import {NavigationService} from "../routing";
 import {ConfigService} from "../config";
 import {SecurityConfig, SecurityService} from "./SecurityService";
 
+function parseBundle(url: string): string|null {
+    if (url == null || url.length == 0)
+        return null
+    url = url.trim()
+    return url.split('/').filter(Boolean)[0]
+}
+
 export class SimpleSecurityService implements SecurityService {
     protected _config: SecurityConfig
     protected _userStore: User
@@ -32,7 +39,12 @@ export class SimpleSecurityService implements SecurityService {
         if (url[0] != '/')
             url = '/' + url
         // TODO: Check if current role is allowed
-        this._nav.navTo(url)
+        const secureBundles = this.getSecureBundles();
+        const bundle = parseBundle(url)
+        const usr = this.getCurrentUser()
+        if (secureBundles.indexOf(bundle) > -1 && usr.getRoles().find(r => bundle === this._config.RoleBundles[r]) == null)
+            this.gotoUserHome()
+        else this._nav.navTo(url)
     }
 
     getSecureBundles(): string[] {

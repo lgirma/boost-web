@@ -1,6 +1,14 @@
 import {AppEvent} from "../events";
 
 export type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'options' | 'head' | 'patch';
+export const enum HttpResponseBodyType {
+    AUTO,
+    JSON,
+    TEXT,
+    BLOB,
+    FORM_DATA,
+    ARRAY_BUFFER,
+}
 
 export interface HttpService {
     onRequesting: AppEvent<RequestInit>;

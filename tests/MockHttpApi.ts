@@ -8,6 +8,7 @@ export function createAndStartApi(routes: (app: Express) => void) {
     app = express();
     const port = 8484;
     app.use(express.json());
+    app.use(express.text());
     app.use(express.urlencoded( {extended: true} ));
 
     routes(app)
