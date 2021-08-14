@@ -25,8 +25,11 @@ export function startup({config, setup, i18nRes}: StartupProps = {}) {
         setup(containerBuilder)
 }
 
-export function boot() {
+export function boot(startPage: any, isSecure = true) {
     if (containerBuilder == null)
         startup()
-    globalThis.c = containerBuilder.finish()
+    const c = globalThis.c = containerBuilder.finish()
+    if (isSecure && c('security').init(isSecure)) {
+        c('app').start(startPage)
+    }
 }

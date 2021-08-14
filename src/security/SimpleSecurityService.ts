@@ -66,7 +66,7 @@ export class SimpleSecurityService implements SecurityService {
         if (user == null)
             user = this.getCurrentUser();
         if (user == null)
-            this._nav.navTo(this._config.AuthPageUrl)
+            this._nav.navTo(this._config.AuthBundle)
         this.gotoRoleHome(user.roles);
     }
 
@@ -88,12 +88,12 @@ export class SimpleSecurityService implements SecurityService {
         const hasUserLoggedIn = this.isUserAuthenticated();
 
         if (isSecure && !hasUserLoggedIn) {
-            this._nav.navTo(this._config.AuthPageUrl)
-            return null;
+            this._nav.navTo(this._config.AuthBundle)
+            return false;
         }
         if (!isSecure && hasUserLoggedIn) {
             this.gotoUserHome(usr);
-            return null;
+            return false;
         }
         if (isSecure && hasUserLoggedIn) {
             // check if role is denied
@@ -101,16 +101,21 @@ export class SimpleSecurityService implements SecurityService {
             const secureBundles = this.getSecureBundles();
             if (secureBundles.indexOf(bundle) > -1 && usr.roles.find(r => bundle === this._config.RoleBundles[r]) == null) {
                 this.gotoUserHome(usr);
-                return null;
+                return false;
+            }
+            if (bundle == this._config.AuthBundle) {
+                this.gotoUserHome(usr)
+                return false;
             }
         }
+        return true;
     }
 
     constructor(config: ConfigService, sessionStorage: SessionStorageService, nav: NavigationService) {
         this._config = config.get<SecurityConfig>('security', {
             RoleBundles: {},
             Roles: [],
-            AuthPageUrl: '/auth',
+            AuthBundle: '/auth',
             LogoutUrl: '/logout',
             UnauthorizedPageUrl: '/error',
             UnsecureBundles: ['auth']

@@ -17,7 +17,7 @@ export interface SecurityConfig {
     /**
      * Url of the login page
      */
-    AuthPageUrl?: string
+    AuthBundle?: string
     /**
      * Url of the logout page
      */
@@ -29,7 +29,7 @@ export interface SecurityConfig {
 }
 
 export interface SecurityService {
-    init(isSecure?: boolean)
+    init(isSecure?: boolean): boolean
     getCurrentPageBundle(): string
     getCurrentUser<TUser extends User = User>(): TUser
     getCurrentUserRole(): string

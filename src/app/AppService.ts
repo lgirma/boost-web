@@ -1,6 +1,7 @@
 export interface AppService {
     getInfo(): AppConfig
     getName(): string
+    start(page: any)
 }
 
 export interface AppConfig {

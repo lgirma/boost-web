@@ -11,7 +11,7 @@ const expect = chai.expect;
 const _config = new SimpleConfigService({
     security: configFor<SecurityConfig>({
         Roles: ['ADMIN', 'GUEST', 'SUPERUSER'],
-        AuthPageUrl: '/login',
+        AuthBundle: '/login',
         LogoutUrl: '/logout',
         UnauthorizedPageUrl: '/400',
         RoleBundles: {ADMIN: 'a', GUEST: 'g', SUPERUSER: 's'},

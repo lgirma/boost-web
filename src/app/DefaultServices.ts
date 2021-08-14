@@ -4,7 +4,7 @@ import {
     DefaultStringUtils,
     FetchHttpService, JWTAuthService,
     LocalSessionStorageService, MessageBoxStateService, SimpleApiErrorHandlerService,
-    SimpleAppService,
+    SvelteAppService,
     SimpleConfigService, Simplei18nService, SimpleSecurityService, StaticConfig, WebPageResourcesService,
     WindowNavigationService,
     ToastStateService, SimpleFormService, DataTableStateService
@@ -12,7 +12,7 @@ import {
 
 export function SetupDefaultServices(services: ContainerBuilder<any>, config?: Partial<StaticConfig>) {
 services.add('config', () => new SimpleConfigService(config))
-    .add('app', c => new SimpleAppService(c('config')))
+    .add('app', c => new SvelteAppService(c('config')))
     .add('nav', () => new WindowNavigationService())
     .add('http', c => new FetchHttpService(c('config')))
     .add('session', () => new LocalSessionStorageService())

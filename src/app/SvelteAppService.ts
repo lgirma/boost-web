@@ -1,7 +1,7 @@
 import {AppConfig, AppService} from "./AppService";
 import {ConfigService} from "../config";
 
-export class SimpleAppService implements AppService {
+export class SvelteAppService implements AppService {
     private readonly _config: AppConfig
 
     getInfo(): AppConfig {return this._config}
@@ -13,6 +13,12 @@ export class SimpleAppService implements AppService {
             name: 'BoostWeb',
             year: 2021,
             version: '1.0.0'
+        })
+    }
+
+    start(page: any) {
+        new page({
+            target: globalThis.document.getElementById('app')!
         })
     }
 }
