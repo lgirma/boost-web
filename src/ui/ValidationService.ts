@@ -1,5 +1,5 @@
-import {Nullable, StringUtils} from "../common";
 import {ValidateFunc} from "./FormModels";
+import {lazyC} from "../di";
 
 const special_char_regex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/
 
@@ -10,82 +10,69 @@ export const MIME_PDF = ['application/pdf']
 export const MIME_MS_EXCEL = ['vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
 export const MIME_MS_WORD = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
 
-export interface PasswordStrength {
-    minLength: number
-    specialChars: boolean
-}
 
-export interface ValidationService {
-    getMinLenValidator(length?: number): ValidateFunc
-    notEmpty(val: any, errorMessage?: string): Nullable<string>
-    validName(val: any, errorMessage?: string): Nullable<string>
-    fileTypeValidator(fileMimeList: string[], errorMessage?: string): ValidateFunc
-    imgTypeFile(errorMessage?: string): ValidateFunc
-    maxFileSize(val: any, errorMessage?: string, maxUploadFileSize?: number): Nullable<string>
-    getStrongPasswordValidator(options?: PasswordStrength): ValidateFunc
-}
+const i18n = lazyC('i18n')
+const str = lazyC('string-utils')
 
-export class SimpleValidationService implements ValidationService {
-    getMinLenValidator(length = 1): ValidateFunc {
-        return val => {
-            if (this._str.isEmpty(val))
-                return 'ERR_VALIDATION_EMPTY_FIELD'
-            else if (val.length < length)
-                return 'ERR_VALIDATION_MIN_LENGTH'
-            return ''
-        }
-    }
 
-    notEmpty(val, errorMessage = 'ERR_VALIDATION_EMPTY_FIELD') {
-        if (val == null) return errorMessage
-        if (val?.constructor === FileList)
-            return val.length == 0 ? errorMessage : ''
-        if (Array.isArray(val))
-            return val.length == 0 ? errorMessage : ''
-        if (typeof val === 'string')
-            return this._str.isEmpty(val) ? errorMessage : '';
+export function getMinLenValidator(length = 1): ValidateFunc {
+    return val => {
+        if (str().isEmpty(val))
+            return i18n()._('ERR_VALIDATION_EMPTY_FIELD')
+        else if (val.length < length)
+            return i18n()._('ERR_VALIDATION_MIN_LENGTH', length)
         return ''
     }
+}
 
-    validName(val, errorMessage = 'ERR_VALIDATION_NAME') {
-        if (/[<>/\\{}*#~`%]+/.test(val)) return errorMessage;
-        return '';
-    }
+export function notEmpty(val, errorMessage = 'ERR_VALIDATION_EMPTY_FIELD') {
+    if (val == null) return i18n()._(errorMessage)
+    if (val?.constructor === FileList)
+        return val.length == 0 ? i18n()._(errorMessage) : ''
+    if (Array.isArray(val))
+        return val.length == 0 ? i18n()._(errorMessage) : ''
+    if (typeof val === 'string')
+        return str().isEmpty(val) ? i18n()._(errorMessage) : '';
+    return ''
+}
 
-    fileTypeValidator(fileMimeList: string[], errorMessage = 'ERR_VALIDATION_FILES') {
-        return (val) => {
-            const fileList = Array.from(val as FileList)
-            if (fileList.length == 0)
-                return ''
-            if (fileList.find(f => fileMimeList.indexOf(f.type) == -1) != null)
-                return errorMessage
+export function validName(val, errorMessage = 'ERR_VALIDATION_NAME') {
+    if (/[<>/\\{}*#~`%]+/.test(val))
+        return i18n()._(errorMessage);
+    return '';
+}
+
+export function fileTypeValidator(fileMimeList: string[], errorMessage = 'ERR_VALIDATION_FILES') {
+    return (val) => {
+        const fileList = Array.from(val as FileList)
+        if (fileList.length == 0)
             return ''
-        }
-    }
-
-    imgTypeFile(errorMessage = 'ERR_VALIDATION_IMAGES') {
-        return this.fileTypeValidator(MIME_IMAGES, errorMessage)
-    }
-
-    maxFileSize(val, errorMessage = 'ERR_VALIDATION_FILE_SIZE', maxUploadFileSize = 1024 * 1024 * 10) {
-        if (Array.from(val as FileList).find(f => f.size > maxUploadFileSize) != null)
-            return errorMessage.replace('{0}', this._str.getFriendlyFileSize(maxUploadFileSize));
+        if (fileList.find(f => fileMimeList.indexOf(f.type) == -1) != null)
+            return i18n()._(errorMessage)
         return ''
     }
+}
 
-    getStrongPasswordValidator({minLength = 8, specialChars = true} = {}) {
-        return val => {
-            if (this._str.isEmpty(val))
-                return 'ERR_VALIDATION_EMPTY_FIELD'
-            else if (val.length < minLength)
-                return 'ERR_VALIDATION_PASSWORD_LEN'
-            else if (val.toLowerCase() === val || val.toUpperCase() === val)
-                return 'ERR_VALIDATION_PASSWORD_CASE'
-            else if (specialChars && !special_char_regex.test(val))
-                return 'ERR_VALIDATION_PASSWORD_SPECIAL_CHAR'
-            return ''
-        }
+export function imgTypeFile(errorMessage = 'ERR_VALIDATION_IMAGES') {
+    return fileTypeValidator(MIME_IMAGES, errorMessage)
+}
+
+export function maxFileSize(val, errorMessage = 'ERR_VALIDATION_FILE_SIZE', maxUploadFileSize = 1024 * 1024 * 10) {
+    if (Array.from(val as FileList).find(f => f.size > maxUploadFileSize) != null)
+        return i18n()._(errorMessage, str().getFriendlyFileSize(maxUploadFileSize))
+    return ''
+}
+
+export function getStrongPasswordValidator({minLength = 8, specialChars = true} = {}) {
+    return val => {
+        if (str().isEmpty(val))
+            return i18n()._('ERR_VALIDATION_EMPTY_FIELD')
+        else if (val.length < minLength)
+            return i18n()._('ERR_VALIDATION_PASSWORD_LEN', minLength)
+        else if (val.toLowerCase() === val || val.toUpperCase() === val)
+            return i18n()._('ERR_VALIDATION_PASSWORD_CASE')
+        else if (specialChars && !special_char_regex.test(val))
+            return i18n()._('ERR_VALIDATION_PASSWORD_SPECIAL_CHAR')
+        return ''
     }
-
-    constructor(protected _str: StringUtils) {}
 }
