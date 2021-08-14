@@ -38,4 +38,8 @@ describe('Utils tests', () => {
         expect(utils.isDate('2012')).to.equal(false)
     })
 
+    it('swapping key-value pairs works', () => {
+        expect(utils.swapKeyValues({a: 1, b: 2, c: 3})).to.deep.equal({1: 'a', 2: 'b', 3: 'c'})
+    })
+
 })

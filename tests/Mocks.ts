@@ -1,6 +1,6 @@
 import {
     ConfigService, HttpService, SecurityService, User, NavigationService,
-    HttpMethod, WebImage, AppService, AppConfig, i18nService, WebLocale, i18nResource
+    HttpMethod, AppService, AppConfig, i18nService, WebLocale, i18nResource
 } from "../src";
 import {SessionStorageService} from "../src";
 
@@ -140,11 +140,6 @@ export function GetMock_i18nService(res: i18nResource, defaultLang = 'en'): i18n
 
 export function getUser(name: string, fullName: string, roles: string[], primaryRole?: string): User {
     return {
-        name, fullName, roles, primaryRole,
-        getFullName() {return fullName},
-        getName(){return name},
-        getPrimaryRole() {return primaryRole ?? roles[0]},
-        getRoles() {return roles},
-        getAvatar(_?): Promise<WebImage> { return Promise.resolve('')  }
-    } as User
+        name, fullName, roles, primaryRole
+    }
 }

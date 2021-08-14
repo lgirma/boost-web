@@ -64,3 +64,9 @@ export function toArray<T>(src: T|T[]|null): T[] {
         return src;
     else return [src]
 }
+
+export function swapKeyValues(obj: Dict<any>): Dict<string> {
+    if (obj == null)
+        return null
+    return Object.keys(obj).reduce((prev, k) => ({...prev, [obj[k]]: k}), {})
+}

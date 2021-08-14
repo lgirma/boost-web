@@ -10,12 +10,12 @@ const expect = chai.expect;
 
 const _config = new SimpleConfigService({
     security: configFor<SecurityConfig>({
-        Roles: {ADMIN: 'Admin', GUEST: 'Guest', SUPERUSER: 'Super User'},
+        Roles: ['ADMIN', 'GUEST', 'SUPERUSER'],
         AuthPageUrl: '/login',
         LogoutUrl: '/logout',
         UnauthorizedPageUrl: '/400',
-        BundleRoles: {a: 'ADMIN', g: 'GUEST', s: 'SUPERUSER'},
-        RoleBundles: {ADMIN: 'a', GUEST: 'g', SUPERUSER: 's'}
+        RoleBundles: {ADMIN: 'a', GUEST: 'g', SUPERUSER: 's'},
+        UnsecureBundles: ['auth']
     })
 })
 

@@ -44,7 +44,7 @@ describe('SimpleAuthService tests', () => {
 
     it('Logs in appropriately', async () => {
         await _auth.login({password: 'admin', userId: 'admin'})
-        expect(_security.getCurrentUser().getName()).to.equal('admin')
+        expect(_security.getCurrentUser().name).to.equal('admin')
     })
 
     it('Logs out appropriately', async () => {

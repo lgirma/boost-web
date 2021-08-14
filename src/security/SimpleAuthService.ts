@@ -21,15 +21,17 @@ export class SimpleAuthService implements AuthService {
             [this._config.UserIdFieldName]: userId,
             [this._config.PasswordFieldName]: password
         })
-        this._security.setUser(loggedInUser)
-        return loggedInUser
+        let user = this._config.UserAdapter(loggedInUser)
+        this._security.setUser(user)
+        return user as TUser
     }
 
     constructor(config: ConfigService, securityService: SecurityService, http: HttpService, nav: NavigationService) {
         this._config = config.get<AuthConfig>('auth', {
             LoginApiUrl: 'auth/login',
             PasswordFieldName: 'password',
-            UserIdFieldName: 'email'
+            UserIdFieldName: 'email',
+            UserAdapter: from => from
         })
         this._security = securityService
         this._http = http

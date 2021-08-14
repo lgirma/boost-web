@@ -3,6 +3,7 @@ import {SessionStorageService} from "../session";
 import {NavigationService} from "../routing";
 import {ConfigService} from "../config";
 import {SecurityConfig, SecurityService} from "./SecurityService";
+import {swapKeyValues} from "../common";
 
 function parseBundle(url: string): string|null {
     if (url == null || url.length == 0)
@@ -29,7 +30,8 @@ export class SimpleSecurityService implements SecurityService {
     }
 
     getCurrentUserRole(): string {
-        return this._config.BundleRoles[this.getCurrentPageBundle()];
+        const bundleRoles = swapKeyValues(this._config.RoleBundles)
+        return bundleRoles[this.getCurrentPageBundle()];
     }
 
     getRoleRootUrl(role: string): string {
@@ -45,13 +47,13 @@ export class SimpleSecurityService implements SecurityService {
         const secureBundles = this.getSecureBundles();
         const bundle = parseBundle(url)
         const usr = this.getCurrentUser()
-        if (secureBundles.indexOf(bundle) > -1 && usr.getRoles().find(r => bundle === this._config.RoleBundles[r]) == null)
+        if (secureBundles.indexOf(bundle) > -1 && usr.roles.find(r => bundle === this._config.RoleBundles[r]) == null)
             this.gotoUserHome()
         else this._nav.navTo(url)
     }
 
     getSecureBundles(): string[] {
-        return Object.keys(this._config.Roles).map(r => this._config.RoleBundles[r]);
+        return this._config.Roles.map(r => this._config.RoleBundles[r]);
     }
 
     gotoRoleHome(roles: string[]) {
@@ -65,7 +67,7 @@ export class SimpleSecurityService implements SecurityService {
             user = this.getCurrentUser();
         if (user == null)
             this._nav.navTo(this._config.AuthPageUrl)
-        this.gotoRoleHome(user.getRoles());
+        this.gotoRoleHome(user.roles);
     }
 
     isUserAuthenticated(): boolean {
@@ -97,7 +99,7 @@ export class SimpleSecurityService implements SecurityService {
             // check if role is denied
             const bundle = this.getCurrentPageBundle();
             const secureBundles = this.getSecureBundles();
-            if (secureBundles.indexOf(bundle) > -1 && usr.getRoles().find(r => bundle === this._config.RoleBundles[r]) == null) {
+            if (secureBundles.indexOf(bundle) > -1 && usr.roles.find(r => bundle === this._config.RoleBundles[r]) == null) {
                 this.gotoUserHome(usr);
                 return null;
             }
@@ -107,11 +109,11 @@ export class SimpleSecurityService implements SecurityService {
     constructor(config: ConfigService, sessionStorage: SessionStorageService, nav: NavigationService) {
         this._config = config.get<SecurityConfig>('security', {
             RoleBundles: {},
-            Roles: {},
-            BundleRoles: {},
+            Roles: [],
             AuthPageUrl: '/auth',
             LogoutUrl: '/logout',
-            UnauthorizedPageUrl: '/error'
+            UnauthorizedPageUrl: '/error',
+            UnsecureBundles: ['auth']
         })
         this._sessionStorage = sessionStorage
         this._nav = nav

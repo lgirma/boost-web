@@ -1,11 +1,30 @@
 import { User } from "./Models";
+import {Dict} from "../common";
 
 export interface SecurityConfig {
-    RoleBundles?: { [key: string]: string }
-    Roles?: { [key: string]: string }
-    BundleRoles?: { [key: string]: string; }
-    AuthPageUrl?: string,
+    /**
+     * A map of roles and their primary root url
+     */
+    RoleBundles?: Dict<string>
+    /**
+     * List of root urls that any un-authenticated user can access
+     */
+    UnsecureBundles?: string[]
+    /**
+     * List of all roles
+     */
+    Roles?: string[]
+    /**
+     * Url of the login page
+     */
+    AuthPageUrl?: string
+    /**
+     * Url of the logout page
+     */
     LogoutUrl?: string
+    /**
+     * Url to redirect to up on attempt to access un-authorized page.
+     */
     UnauthorizedPageUrl?: string
 }
 
