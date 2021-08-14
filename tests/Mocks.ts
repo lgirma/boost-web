@@ -126,7 +126,10 @@ export function GetMock_i18nService(res: i18nResource, defaultLang = 'en'): i18n
         _currLang: defaultLang,
         getLanguages(): WebLocale[] {return []},
         _(key: string, ..._): string {
-            return this._res[this._currLang][key] ?? key
+            return this.exact(key, ..._) ?? key
+        },
+        exact(key: string, ..._): string {
+            return this._res[this._currLang][key]
         },
         changeLanguage(lang: string) {this._currLang = lang},
         getCurrentUserLanguage(): string {return this._currLang},

@@ -8,7 +8,10 @@ function parseBundle(url: string): string|null {
     if (url == null || url.length == 0)
         return null
     url = url.trim()
-    return url.split('/').filter(Boolean)[0]
+    const urlPaths = url.split('/').filter(Boolean)
+    if (urlPaths.length == 0)
+        return ''
+    return urlPaths[0].replace('.html', '')
 }
 
 export class SimpleSecurityService implements SecurityService {
@@ -18,7 +21,7 @@ export class SimpleSecurityService implements SecurityService {
     protected _nav: NavigationService;
 
     getCurrentPageBundle(): string {
-        return this._nav.getCurrentPath().replace('/', '').replace('.html', '');
+        return parseBundle(this._nav.getCurrentPath())
     }
 
     getCurrentUser<TUser extends User = User>(): TUser {

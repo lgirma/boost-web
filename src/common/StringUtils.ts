@@ -15,9 +15,9 @@ export class DefaultStringUtils implements StringUtils {
     humanize(str: string) {
         return str
             .replace(/^[\s_]+|[\s_]+$/g, '')
-            .replace(/[_\s]+/g, ' ')
-            .replace(/(\S)([A-Z])/g, '$1 $2')
-            .replace(/^[a-z]/, function(m) { return m.toUpperCase(); })
+            .replace(/[_\s\-]+/g, ' ')
+            .replace(/([a-z_])([A-Z])/g, '$1 $2')
+            .replace(/^[a-z]/,  m => m.toUpperCase())
             .trim();
     }
     humanized_i18n(str: string): string {
@@ -25,8 +25,8 @@ export class DefaultStringUtils implements StringUtils {
             return ''
         const humanized = this.humanize(str)
         const key = humanized.replace(/\s/g, '_').toUpperCase()
-        let val = this._i18n._(key)
-        if (val !== key) return val
+        let val = this._i18n.exact(key)
+        if (val != null) return val
         return humanized
     }
 

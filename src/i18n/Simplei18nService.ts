@@ -12,6 +12,10 @@ export class Simplei18nService implements i18nService {
     _sessionStorage: SessionStorageService
 
     _(key: string, ...args): string {
+        return this.exact(key, ...args) ?? key;
+    }
+
+    exact(key: string, ...args): string {
         if (key == null || key.trim().length == 0)
             return ''
         const currLang = this._currentLang ?? this.getCurrentUserLanguage();
@@ -24,7 +28,7 @@ export class Simplei18nService implements i18nService {
         for (let i = 0; i < args.length; i++) {
             result = result.replace(`{${i}}`, args[i]);
         }
-        return result ?? key;
+        return result
     }
 
     changeLanguage(lang: string) {

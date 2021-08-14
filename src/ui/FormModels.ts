@@ -132,6 +132,6 @@ export const SimpleTextTypes : FormFieldType[] = [
 ]
 
 export type PartialFieldConfig = Partial<FieldConfig>
-export type PartialFormConfig = Partial<FormConfig> & {
+export type PartialFormConfig = Omit<Partial<FormConfig>, 'fieldsConfig'> & {
     fieldsConfig?: Dict<Partial<FieldConfig>>
 }

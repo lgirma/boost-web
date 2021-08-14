@@ -29,6 +29,11 @@ describe('Simplei18nService tests', () => {
         expect(_i18n._('OK2')).to.equal('OK2')
     })
 
+    it('Matches exact properly', () => {
+        expect(_i18n.exact('OK')).to.equal('Ok')
+        expect(_i18n.exact('OK2')).to.equal(undefined)
+    })
+
     it('Returns parameterized keys properly', () => {
         expect(_i18n._('TRAVEL', 'A', 'B')).to.equal('Travel from A to B')
     })

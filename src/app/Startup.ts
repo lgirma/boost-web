@@ -1,6 +1,6 @@
 import {
     Container,
-    ContainerBuilder,
+    ContainerBuilder, deepMerge,
     i18nResource,
     StaticConfig
 } from "..";
@@ -13,8 +13,10 @@ export interface StartupProps {
     setup?: (services: ContainerBuilder<any>) => void
 }
 
-export function startup({config, setup}: StartupProps = {}) {
+export function startup({config, setup, i18nRes}: StartupProps = {}) {
     config = {...config}
+    config.i18n = {...config.i18n}
+    config.i18n.translations = deepMerge(config.i18n.translations, i18nRes)
     if (globalThis.window)
         globalThis.window.document.title = config.app.title
     containerBuilder = Container()

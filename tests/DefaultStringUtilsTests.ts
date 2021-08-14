@@ -18,6 +18,7 @@ describe('DefaultStringUtils tests', () => {
         expect(_str.humanize('gone')).to.equal('Gone');
         expect(_str.humanize('goneWithIt')).to.equal('Gone With It');
         expect(_str.humanize('gone_with_it')).to.equal('Gone with it');
+        //expect(_str.humanize('GONE_WITH_IT')).to.equal('Gone With It');
     })
 
     it('Does not change already humanized string', () => {

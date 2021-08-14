@@ -27,7 +27,7 @@ export function getMinLenValidator(length = 1): ValidateFunc {
 
 export function notEmpty(val, errorMessage = 'ERR_VALIDATION_EMPTY_FIELD') {
     if (val == null) return i18n()._(errorMessage)
-    if (val?.constructor === FileList)
+    if (val?.constructor === globalThis.FileList)
         return val.length == 0 ? i18n()._(errorMessage) : ''
     if (Array.isArray(val))
         return val.length == 0 ? i18n()._(errorMessage) : ''

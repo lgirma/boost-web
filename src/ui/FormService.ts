@@ -23,6 +23,10 @@ export interface FormService {
     validate(forObject: any, formConfig: FormConfig) : FormValidationResult
 }
 
+function getChoice(key: any, label: string, _str: StringUtils) {
+    return {value: key, label: _str.humanized_i18n(label)}
+}
+
 export class SimpleFormService implements FormService {
     getValidationResult(errorMessage?: string): ValidationResult {
         return {
@@ -67,6 +71,13 @@ export class SimpleFormService implements FormService {
             }
         }
 
+        for (const fieldId in config.fieldsConfig) {
+            if (!config.fieldsConfig.hasOwnProperty(fieldId))
+                continue
+            if (!forObject.hasOwnProperty(fieldId))
+                forObject[fieldId] = null;
+        }
+
         for (const fieldId in forObject) {
             if (!forObject.hasOwnProperty(fieldId))
                 continue
@@ -86,18 +97,21 @@ export class SimpleFormService implements FormService {
             ...fieldConfig,
         } as FieldConfig
         if (this._str.isEmpty(result.label))
-            result.label = this._str.humanize(fieldId)
+            result.label = this._str.humanized_i18n(fieldId)
         if (result?.choices == null)
             result.choices = []
         else if (result.choices?.constructor === Array) {
             if (result.choices.length == 0)
                 result.choices = []
             else if (typeof result.choices[0] === 'string') {
-                result.choices = result.choices.map(c => ({value: c, label: c}))
+                result.choices = result.choices.map(c => getChoice(c, c, this._str))
+            }
+            else {
+                result.choices = result.choices.map(c => getChoice(c.value, c.label, this._str))
             }
         }
         else {
-            Object.keys(result.choices).map(c => ({value: c, label: result.choices[c]}))
+            result.choices = Object.keys(result.choices).map(c => getChoice(c, result.choices[c], this._str))
         }
 
         return result
