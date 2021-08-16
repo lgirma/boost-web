@@ -1,10 +1,11 @@
 import {
     ConfigService, HttpService, SecurityService, User, NavigationService,
-    HttpMethod, AppService, AppConfig, i18nService, WebLocale, i18nResource
+    HttpMethod, AppService, AppConfig, i18nService, WebLocale, i18nResource,
+    StaticConfig, DataTableDataSource
 } from "../src";
 import {SessionStorageService} from "../src";
 
-export function GetMockConfigService(initialConfig: any = {}): ConfigService {
+export function GetMockConfigService(initialConfig: StaticConfig = {}): ConfigService {
     return {
         _config: initialConfig,
         get(section, defaultValue) {
@@ -19,7 +20,8 @@ export function GetMockAppService(appName = 'Test'): AppService {
         getName(): string {return appName},
         getInfo(): AppConfig {
             return {name: appName}
-        }
+        },
+        start(_: any) { }
     }
 }
 
@@ -136,6 +138,36 @@ export function GetMock_i18nService(res: i18nResource, defaultLang = 'en'): i18n
         addTranslations(_: i18nResource) {}
     }
     return result
+}
+
+export interface MockPagedData {
+    data: any[]
+    totalPages: number
+    count: number
+}
+
+export interface MockDataFilter {
+    page: number
+    itemsPerPage: number
+    sortInfo: {column: string, asc: boolean}[]
+}
+
+export function GetMockDataSource(mockData: any[]): DataTableDataSource {
+    return {
+        async getRows(filter, filterAdapter, dataAdapter) {
+            return dataAdapter(GetMockRemoteDataSource(mockData, filterAdapter(filter)))
+        }
+    }
+}
+
+function GetMockRemoteDataSource(seedData: any[], filter: MockDataFilter): MockPagedData {
+    return {
+        data: seedData.filter((_, n) =>
+            n >= filter.page * filter.itemsPerPage
+            && n < (filter.page + 1) * filter.itemsPerPage),
+        totalPages: Math.ceil(seedData.length / filter.itemsPerPage),
+        count: seedData.length
+    }
 }
 
 export function getUser(name: string, fullName: string, roles: string[], primaryRole?: string): User {
