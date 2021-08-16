@@ -19,7 +19,7 @@ export class JWTAuthService extends SimpleAuthService {
         http.onResponseNotOk.subscribe(response => {
             let authHeader = response.headers.get('WWW-Authenticate')
             if (authHeader && authHeader.indexOf('Bearer error="invalid_token"') > -1) {
-                this.logout()
+                this._security.logout()
             }
         })
     }

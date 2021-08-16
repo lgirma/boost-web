@@ -11,10 +11,6 @@ export class SimpleAuthService implements AuthService {
     protected _http: HttpService
     protected _nav: NavigationService
 
-    logout() {
-        this._security.setUser(null)
-        this._nav.navTo('/')
-    }
     async login<TUser extends User = User>(loginData: LoginModel): Promise<TUser> {
         const {userId, password} = loginData;
         let loggedInUser = await this._http.post(this._config.LoginApiUrl, {

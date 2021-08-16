@@ -1,8 +1,8 @@
 import {
     Container,
     ContainerBuilder, deepMerge,
-    i18nResource,
-    StaticConfig
+    i18nResource, SecurityConfig,
+    StaticConfig, User
 } from "..";
 
 let containerBuilder: ContainerBuilder<any>
@@ -29,7 +29,18 @@ export function boot(startPage: any, isSecure = true) {
     if (containerBuilder == null)
         startup()
     const c = globalThis.c = containerBuilder.finish()
-    if (isSecure && c('security').init(isSecure)) {
+    if (isSecure) {
+        if (c('security').init(isSecure))
+            c('app').start(startPage)
+    } else {
         c('app').start(startPage)
     }
+}
+
+export function preStart(securityConfig: SecurityConfig) {
+    let user = JSON.parse(localStorage.getItem('user')) as User
+    if (user == null)
+        window.location.href = securityConfig.AuthBundle
+    else
+        window.location.href = securityConfig.RoleBundles[user.primaryRole]
 }

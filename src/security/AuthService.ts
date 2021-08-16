@@ -9,6 +9,5 @@ export interface AuthConfig {
 }
 
 export interface AuthService {
-    logout()
     login<TUser extends User = User>(loginData:LoginModel): Promise<TUser>
 }

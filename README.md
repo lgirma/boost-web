@@ -10,34 +10,42 @@ Web functionality abstractions.
 npm i boost-web
 ```
 
-## Usage
+## Basic Usage
 
-Implement any interface using your favorite dependency injection.
+Use the `startup` method to initialize dependencies and `boot` to start your application.
 
-For example, manually setting up modules `config`, `app` and `http`:
-
-**Container.ts**:
+**Startup.ts**:
 ```typescript
 import appConfig from './appConfig.dev.json'
+import i18n_res from './i18n.json'
+import {startup, boot, SetupDefaultServices} from 'boost-web'
+import MyHomePage from './MyHomePage.svelte'
 
-const _config: ConfigService = new SimpleConfigService(appConfig)
-const _app: AppService = new SimpleAppService(_config)
-const _http: HttpService = new FetchHttpService(_config)
+startup({
+    config: appConfig,
+    i18nRes: i18n_res,
+    setup: services => {
+        SetupDefaultServices(services, appConfig)
+    }
+})
+
+boot(MyHomePage)
 ```
 
-Then using the `http` service:
+Then to access any of the services use `globalThis.c` or simply `c`:
 
 ```typescript
-import {_http} from '/Container'
+const _http = globalThis.c('http')
 
-let apiInfo = await _http.get<ApiInfo>('api/info')
+// ... later:
+let apiInfo = await _http.get('api/info')
 ```
 
 ## Provided Modules
 
 | Module |  |
 | ------------------------| -------|
-| [app](https://github.com/lgirma/boost-web/tree/master/src/app) | Application info |
+| [app](https://github.com/lgirma/boost-web/tree/master/src/app) | Application startup and info |
 | [config](https://github.com/lgirma/boost-web/tree/master/src/config) | Static application configuration |
 | [events](https://github.com/lgirma/boost-web/tree/master/src/events) | publish and subscribe to events |
 | [http](https://github.com/lgirma/boost-web/tree/master/src/events) | Http based Api calls |
@@ -50,4 +58,4 @@ let apiInfo = await _http.get<ApiInfo>('api/info')
 
 ## More
 
-To install more plugins, check out [boost-web-universe](https://github.com/lgirma/boost-web-universe) package.
+To install more plugins, check out [boost-web-universe](https://github.com/lgirma/boost-web-universe) and [boost-web-universe-svelte](https://github.com/lgirma/boost-web-universe-svelte) packages.

@@ -2,7 +2,7 @@ import {
     ConstDataSource,
     DataTableConfig,
     DataTableFilter,
-    DataTableOptions,
+    DataTableOptions, DataTableOptionsFrom,
     DataTablePagination,
     PagedData
 } from "./DataTableModels";
@@ -13,7 +13,7 @@ import {ConfigService} from "../config";
 export interface DataTableService {
     getDefaultFilter(): DataTableFilter
     getData(options: DataTableOptions, filter: DataTableFilter): Promise<PagedData>
-    getConfig(options: Partial<DataTableOptions>): Promise<DataTableOptions>
+    getConfig(options: DataTableOptionsFrom): Promise<DataTableOptions>
     getPagination(filter: DataTableFilter, data: PagedData): DataTablePagination
 }
 
@@ -30,7 +30,7 @@ export class DataTableStateService implements DataTableService {
             this._config.pagedDataAdapter)
     }
 
-    async getConfig(options: Partial<DataTableOptions>): Promise<DataTableOptions> {
+    async getConfig(options: DataTableOptionsFrom): Promise<DataTableOptions> {
         if (options.$$isComplete)
             return options as any
         const result: DataTableOptions = {

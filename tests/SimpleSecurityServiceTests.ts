@@ -11,7 +11,7 @@ const expect = chai.expect;
 const _config = new SimpleConfigService({
     security: configFor<SecurityConfig>({
         Roles: ['ADMIN', 'GUEST', 'SUPERUSER'],
-        AuthBundle: '/login',
+        AuthBundle: '/auth',
         LogoutUrl: '/logout',
         UnauthorizedPageUrl: '/400',
         RoleBundles: {ADMIN: 'a', GUEST: 'g', SUPERUSER: 's'},
@@ -29,7 +29,7 @@ describe('SimpleAuthService tests', () => {
 
     it('Initializes properly', () => {
         _security.init()
-        expect(GetLastNavPath()).to.equal('/login')
+        expect(GetLastNavPath()).to.equal('/auth')
     })
 
     it('Navigation for roles works properly', () => {
@@ -54,6 +54,13 @@ describe('SimpleAuthService tests', () => {
     it('Denies navigation to unauthorized page', () => {
         _security.gotoUrl('/s/reset-db')
         expect(GetLastNavPath()).to.equal('/a')
+    })
+
+    it('Logs out appropriately', async () => {
+        _security.setUser(getUser('admin', 'Administrator', ['ADMIN', 'GUEST']))
+        _security.logout()
+        expect(GetLastNavPath()).to.equal('/auth')
+        expect(_security.getCurrentUser()).to.be.null
     })
 
 })

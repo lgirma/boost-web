@@ -7,6 +7,10 @@ export interface DataTableConfig {
     pagedDataAdapter?: PagedDataAdapter
 }
 
+export type DataTableOptionsFrom = Partial<DataTableOptions> &
+    Omit<DataTableOptions, 'dataSource'> & { dataSource: DataTableDataSource } &
+    Omit<DataTableOptions, 'columns'> & { columns: Dict<Partial<DataTableColumn>> }
+
 export interface DataTableOptions {
     columns: Dict<DataTableColumn>
     dataSource: DataTableDataSource
@@ -78,7 +82,7 @@ export class HttpDataSource implements DataTableDataSource {
         }
         catch (e) {
             _apiError.handle(e, this._apiErrorHandler)
-            return null
+            throw e
         }
     }
 }

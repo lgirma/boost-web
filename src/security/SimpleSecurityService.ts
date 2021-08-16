@@ -12,7 +12,7 @@ function parseBundle(url: string): string|null {
     const urlPaths = url.split('/').filter(Boolean)
     if (urlPaths.length == 0)
         return ''
-    return urlPaths[0].replace('.html', '')
+    return urlPaths[0]
 }
 
 export class SimpleSecurityService implements SecurityService {
@@ -88,6 +88,8 @@ export class SimpleSecurityService implements SecurityService {
         const hasUserLoggedIn = this.isUserAuthenticated();
 
         if (isSecure && !hasUserLoggedIn) {
+            if (this.getCurrentPageBundle() == this._config.AuthBundle)
+                return true;
             this._nav.navTo(this._config.AuthBundle)
             return false;
         }
@@ -109,6 +111,11 @@ export class SimpleSecurityService implements SecurityService {
             }
         }
         return true;
+    }
+
+    logout() {
+        this.setUser(null, false)
+        this._nav.navTo(this._config.AuthBundle)
     }
 
     constructor(config: ConfigService, sessionStorage: SessionStorageService, nav: NavigationService) {

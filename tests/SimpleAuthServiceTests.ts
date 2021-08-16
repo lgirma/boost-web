@@ -2,7 +2,7 @@ import {SimpleAuthService, SimpleConfigService, AuthConfig, configFor} from "../
 import { describe } from 'mocha';
 import {
     ApiError,
-    GetLastMockHttpCall, GetLastNavPath,
+    GetLastMockHttpCall,
     GetMockHttpService,
     GetMockNavService,
     GetMockSecurityService,
@@ -45,13 +45,6 @@ describe('SimpleAuthService tests', () => {
     it('Logs in appropriately', async () => {
         await _auth.login({password: 'admin', userId: 'admin'})
         expect(_security.getCurrentUser().name).to.equal('admin')
-    })
-
-    it('Logs out appropriately', async () => {
-        await _auth.login({password: 'admin', userId: 'admin'})
-        _auth.logout()
-        expect(GetLastNavPath()).to.equal('/')
-        expect(_security.getCurrentUser()).to.be.null
     })
 
 })

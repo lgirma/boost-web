@@ -40,4 +40,5 @@ export interface SecurityService {
     isUserAuthenticated(): boolean
     setUser(user: User, goHome?: boolean)
     gotoUrl(url: string)
+    logout()
 }
