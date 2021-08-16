@@ -1,6 +1,11 @@
 import {FormFieldType} from "./FormModels";
 import {ApiError} from "../http";
-import {Dict} from "../common";
+import {Adapter, Dict} from "../common";
+
+export interface DataTableConfig {
+    filterAdapter?: FilterAdapter
+    pagedDataAdapter?: PagedDataAdapter
+}
 
 export interface DataTableOptions {
     columns: Dict<DataTableColumn>
@@ -27,15 +32,18 @@ export interface DataTableFilter {
     sort: SortInfo[]
 }
 
-export interface TableData {
+export interface PagedData {
     items: any[]
     pageCount: number
     totalCount: number
 }
 
 export interface DataTableDataSource {
-    getRows(filter: DataTableFilter): Promise<TableData>
+    getRows(filter: DataTableFilter, filterAdapter: FilterAdapter, dataAdapter: PagedDataAdapter): Promise<PagedData>
 }
+
+export type FilterAdapter = Adapter<any, DataTableFilter>
+export type PagedDataAdapter = Adapter<PagedData, any>
 
 export interface DataTablePagination {
     canGoFirst: boolean
@@ -47,12 +55,12 @@ export interface DataTablePagination {
 export class ConstDataSource implements DataTableDataSource {
     constructor(private _rows: any[]) {}
 
-    async getRows(filter: DataTableFilter): Promise<TableData | null> {
+    async getRows(filter: DataTableFilter, _, _2): Promise<PagedData | null> {
         return {
             items: this._rows.filter((_, n) =>
                 n >= filter.currentPage * filter.pageSize
                 && n < (filter.currentPage + 1) * filter.pageSize),
-            pageCount: this._rows.length / filter.pageSize,
+            pageCount: Math.ceil(this._rows.length / filter.pageSize),
             totalCount: this._rows.length
         }
     }
@@ -62,11 +70,11 @@ export class HttpDataSource implements DataTableDataSource {
 
     constructor(private _url: string, private _apiErrorHandler: (err: ApiError) => void = null) {}
 
-    async getRows(filter: DataTableFilter): Promise<TableData | null> {
+    async getRows(filter: DataTableFilter, filterAdapter: FilterAdapter, dataAdapter: PagedDataAdapter): Promise<PagedData | null> {
         const _http = globalThis.c('http')
         const _apiError = globalThis.c('api-error')
         try {
-            return await _http.post(this._url, filter)
+            return dataAdapter(await _http.post(this._url, filterAdapter(filter)))
         }
         catch (e) {
             _apiError.handle(e, this._apiErrorHandler)

@@ -1,21 +1,33 @@
-import {ConstDataSource, DataTableFilter, DataTableOptions, DataTablePagination, TableData} from "./DataTableModels";
+import {
+    ConstDataSource,
+    DataTableConfig,
+    DataTableFilter,
+    DataTableOptions,
+    DataTablePagination,
+    PagedData
+} from "./DataTableModels";
 import {FormService} from "./FormService";
 import {StringUtils} from "../common";
+import {ConfigService} from "../config";
 
 export interface DataTableService {
     getDefaultFilter(): DataTableFilter
-    getData(options: DataTableOptions, filter: DataTableFilter): Promise<TableData>
+    getData(options: DataTableOptions, filter: DataTableFilter): Promise<PagedData>
     getConfig(options: Partial<DataTableOptions>): Promise<DataTableOptions>
-    getPagination(filter: DataTableFilter, data: TableData): DataTablePagination
+    getPagination(filter: DataTableFilter, data: PagedData): DataTablePagination
 }
 
 export class DataTableStateService implements DataTableService {
+    private _config: DataTableConfig
+
     getDefaultFilter(): DataTableFilter {
         return {sort: [], pageSize: 10, currentPage: 0}
     }
 
-    async getData(options: DataTableOptions, filter: DataTableFilter): Promise<TableData> {
-        return await options.dataSource.getRows(filter ?? this.getDefaultFilter())
+    async getData(options: DataTableOptions, filter: DataTableFilter): Promise<PagedData> {
+        return await options.dataSource.getRows(filter ?? this.getDefaultFilter(),
+            this._config.filterAdapter,
+            this._config.pagedDataAdapter)
     }
 
     async getConfig(options: Partial<DataTableOptions>): Promise<DataTableOptions> {
@@ -29,7 +41,9 @@ export class DataTableStateService implements DataTableService {
             $$isComplete: true
         }
         result.columns ??= {}
-        let peekRows = (await options.dataSource.getRows({pageSize: 1, currentPage: 0, sort: []})).items
+        let peekRows = (await options.dataSource.getRows({pageSize: 1, currentPage: 0, sort: []},
+            this._config.filterAdapter,
+            this._config.pagedDataAdapter)).items
         if (peekRows.length == 0)
             return result
         const row = peekRows[0]
@@ -50,7 +64,7 @@ export class DataTableStateService implements DataTableService {
         }
         return result
     }
-    getPagination(filter: DataTableFilter, data: TableData): DataTablePagination {
+    getPagination(filter: DataTableFilter, data: PagedData): DataTablePagination {
         return {
             canGoFirst: filter.currentPage != 0,
             canGoPrev: filter.currentPage != 0,
@@ -59,6 +73,11 @@ export class DataTableStateService implements DataTableService {
         }
     }
 
-    constructor(private _formService: FormService, private _str: StringUtils) { }
+    constructor(private _formService: FormService, private _str: StringUtils, appConfig: ConfigService) {
+        this._config = appConfig.get('data', {
+            filterAdapter: from => from,
+            pagedDataAdapter: pagedData => pagedData
+        })
+    }
 
 }

@@ -27,5 +27,5 @@ services.add('config', () => new SimpleConfigService(config))
     .add('toast', () => new ToastStateService())
     .add('form', c => new SimpleFormService(c('string-utils')))
     .add('api-error', c => new SimpleApiErrorHandlerService(c('config'), c('toast')))
-    .add('data-table', c => new DataTableStateService(c('form'), c('string-utils')))
+    .add('data-table', c => new DataTableStateService(c('form'), c('string-utils'), c('config')))
 }
