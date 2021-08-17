@@ -1,7 +1,7 @@
 import {
     ConfigService, HttpService, SecurityService, User, NavigationService,
     HttpMethod, AppService, AppConfig, i18nService, WebLocale, i18nResource,
-    StaticConfig, DataTableDataSource
+    StaticConfig, PagedDataSource
 } from "../src";
 import {SessionStorageService} from "../src";
 
@@ -152,7 +152,7 @@ export interface MockDataFilter {
     sortInfo: {column: string, asc: boolean}[]
 }
 
-export function GetMockDataSource(mockData: any[]): DataTableDataSource {
+export function GetMockDataSource(mockData: any[]): PagedDataSource {
     return {
         async getRows(filter, filterAdapter, dataAdapter) {
             return dataAdapter(GetMockRemoteDataSource(mockData, filterAdapter(filter)))

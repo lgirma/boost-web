@@ -1,14 +1,12 @@
 import {
-    ConstDataSource,
     DataTableConfig,
-    DataTableFilter,
     DataTableOptions, DataTableOptionsFrom,
     DataTablePagination,
-    PagedData
 } from "./DataTableModels";
 import {FormService} from "./FormService";
 import {StringUtils} from "../common";
 import {ConfigService} from "../config";
+import {ConstPagedDataSource, DataTableFilter, PagedData} from "../data";
 
 export interface DataTableService {
     getDefaultFilter(): DataTableFilter
@@ -34,7 +32,7 @@ export class DataTableStateService implements DataTableService {
         if (options.$$isComplete)
             return options as any
         const result: DataTableOptions = {
-            dataSource: new ConstDataSource([{fullName: '', age: 5, price: '4.5'}]),
+            dataSource: new ConstPagedDataSource([{fullName: '', age: 5, price: '4.5'}]),
             columns: {},
             selectableRows: true,
             ...options,
