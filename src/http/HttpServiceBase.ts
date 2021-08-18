@@ -11,12 +11,15 @@ export abstract class HttpServiceBase implements HttpService {
     protected _config: HttpConfig
 
     async get<T = any>(url: string, config?: RequestInit): Promise<T> {
-        const response = await this.request('get', url, null, config)
-        return await tryReadBody(response)
+        return await this.read<T>(url, 'get', null, config)
     }
 
     async post<T = any>(url: string, body: any, config?: RequestInit): Promise<T> {
-        const response = await this.request('post', url, body, config)
+        return await this.read<T>(url, 'post', body, config)
+    }
+
+    async read<T = any>(url: string, method: HttpMethod, body?: any, config?: RequestInit): Promise<T> {
+        const response = await this.request(method, url, body, config)
         return await tryReadBody(response)
     }
 

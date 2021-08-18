@@ -7,7 +7,7 @@ import {
     SvelteAppService,
     SimpleConfigService, Simplei18nService, SimpleSecurityService, StaticConfig, WebPageResourcesService,
     WindowNavigationService,
-    ToastStateService, SimpleFormService, DataTableStateService
+    ToastStateService, SimpleFormService, DataTableStateService, LookupServiceImpl
 } from "..";
 
 export function SetupDefaultServices(services: ContainerBuilder<any>, config?: Partial<StaticConfig>) {
@@ -28,4 +28,5 @@ services.add('config', () => new SimpleConfigService(config))
     .add('form', c => new SimpleFormService(c('string-utils')))
     .add('api-error', c => new SimpleApiErrorHandlerService(c('config'), c('toast')))
     .add('data-table', c => new DataTableStateService(c('form'), c('string-utils'), c('config')))
+    .add('lookup', c => new LookupServiceImpl(c('config')))
 }

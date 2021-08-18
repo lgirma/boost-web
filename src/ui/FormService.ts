@@ -8,6 +8,7 @@ import {
 } from "./FormModels";
 import {Nullable, Dict, StringUtils, isDate, isDateTime, isTime, isYear, toArray} from '../common'
 import {notEmpty} from "./ValidationService";
+import {LookupItem} from "../data";
 
 export interface FormService {
     getValidationResult(errorMessage?: string): ValidationResult
@@ -23,8 +24,8 @@ export interface FormService {
     validate(forObject: any, formConfig: FormConfig) : FormValidationResult
 }
 
-function getChoice(key: any, label: string, _str: StringUtils) {
-    return {value: key, label: _str.humanized_i18n(label)}
+function getChoice(key: any, val: string, _str: StringUtils): LookupItem {
+    return {key, val: _str.humanized_i18n(val)}
 }
 
 export class SimpleFormService implements FormService {
@@ -107,7 +108,7 @@ export class SimpleFormService implements FormService {
                 result.choices = result.choices.map(c => getChoice(c, c, this._str))
             }
             else {
-                result.choices = result.choices.map(c => getChoice(c.value, c.label, this._str))
+                result.choices = (result.choices as LookupItem[]).map(c => getChoice(c.key, c.val, this._str))
             }
         }
         else {
@@ -187,7 +188,7 @@ export class SimpleFormService implements FormService {
     guessConfig(val: any, fieldType: FormFieldType, _?: PartialFieldConfig): PartialFieldConfig {
         let result: Partial<FieldConfig> = {}
         if (val != null && val.constructor === Array && fieldType == 'radio') {
-            result.choices = val.map(c => ({value: c, label: this._str.humanize(c)})) //val.reduce((acc, el) => ({...acc, [el]: this._str.humanize(el)}), {})
+            result.choices = val.map(c => ({key: c, val: this._str.humanize(c)}))
             result.multiple = true
         }
         if (fieldType == 'password')

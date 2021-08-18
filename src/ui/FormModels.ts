@@ -1,11 +1,7 @@
 import {Dict, OneOrMany, Nullable} from "../common";
+import {LookupItem} from "../data";
 
 export type FieldsConfig = Record<string, FieldConfig>
-
-export interface FieldChoice {
-    value: any
-    label: string
-}
 
 export interface FieldConfig extends Partial<HTMLInputElement> {
     id: string
@@ -21,7 +17,7 @@ export interface FieldConfig extends Partial<HTMLInputElement> {
     customOptions?: any,
     maxlength?: string
     multiple?: boolean
-    choices: string[] | Dict<string> | FieldChoice[]
+    choices: string[] | Dict<string> | LookupItem[]
     variation?: string
     hideLabel: boolean
     scale: number

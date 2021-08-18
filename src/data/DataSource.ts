@@ -1,7 +1,8 @@
 import {ApiError, HttpMethod, HttpService} from "../http";
+import {Adapter} from "../common";
 
 export interface DataSource {
-    read<T = any>(): Promise<T>
+    read<T = any>(adapter?: Adapter<T>): Promise<T>
 }
 
 export interface HttpDataSourceOptions {
@@ -14,8 +15,9 @@ export interface HttpDataSourceOptions {
 export class ConstDataSource implements DataSource {
     constructor(private _data: any) {}
 
-    read<T = any>(): Promise<T> {
-        return Promise.resolve(this._data);
+    read<T = any>(adapter?: Adapter<T>): Promise<T> {
+        adapter ??= x => x
+        return Promise.resolve(adapter(this._data));
     }
 }
 
@@ -30,13 +32,15 @@ export class HttpDataSource implements DataSource {
         }
     }
 
-    async read<T = any>(): Promise<T> {
+    async read<T = any>(adapter?: Adapter<T>): Promise<T> {
+        adapter ??= x => x
         const _http = globalThis.c('http') as HttpService
         const _apiError = globalThis.c('api-error')
 
         try {
-            return (await _http.request(this._options.method, this._options.url,
-                this._options.httpOptions.body, this._options.httpOptions)) as any
+            const response = await _http.read(this._options.url, this._options.method,
+                this._options.httpOptions.body, this._options.httpOptions)
+            return adapter(response) as any
         }
         catch (e) {
             _apiError.handle(e, this._options.errorHandler)

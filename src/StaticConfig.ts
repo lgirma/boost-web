@@ -3,6 +3,7 @@ import {HttpConfig} from "./http";
 import {i18nConfig} from "./i18n";
 import {AuthConfig, SecurityConfig} from "./security";
 import {DataTableConfig} from "./ui";
+import {LookupConfig} from "./data";
 
 export interface StaticConfig {
     app?: AppConfig
@@ -12,4 +13,5 @@ export interface StaticConfig {
     auth?: AuthConfig
     data?: DataTableConfig
     [others: string]: any
+    lookup: LookupConfig
 }

@@ -16,9 +16,10 @@ export interface HttpService {
     onResponseNotOk: AppEvent<Response>;
     onResponseError: AppEvent<any>;
 
-    get<T = any>(url: string, config?: RequestInit): Promise<T>;
-    post<T = any>(url: string, body: any, config?: RequestInit): Promise<T>;
-    request(method: HttpMethod, url: string, body?: any, config?: RequestInit): Promise<Response>;
+    get<T = any>(url: string, config?: RequestInit): Promise<T>
+    post<T = any>(url: string, body: any, config?: RequestInit): Promise<T>
+    read<T = any>(url: string, method: HttpMethod, body?: any, config?: RequestInit): Promise<T>
+    request(method: HttpMethod, url: string, body?: any, config?: RequestInit): Promise<Response>
 }
 
 export const enum HttpErrorType {

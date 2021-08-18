@@ -17,6 +17,7 @@ import {
 } from "../ui";
 import {AppService} from "../app";
 import {StringUtils} from "../common";
+import {LookupService} from "../data";
 
 export type ContainerServices = {
     app: AppService
@@ -39,6 +40,7 @@ export type ContainerServices = {
     [others: string]: any,
     form: FormService
     'data-table': DataTableService
+    lookup: LookupService
 }
 
 export type ContainerType = <K extends keyof ContainerServices>(name: K) => ContainerServices[K]
