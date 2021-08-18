@@ -28,6 +28,30 @@ function getChoice(key: any, val: string, _str: StringUtils): LookupItem {
     return {key, val: _str.humanized_i18n(val)}
 }
 
+function getChoices(from: string[] | Dict<string> | LookupItem[], required: boolean, str: StringUtils): LookupItem[] {
+    let result: LookupItem[] = []
+    if (from == null)
+        result = []
+    else if (from.constructor === Array) {
+        if (from.length == 0)
+            result = []
+        else if (typeof from[0] === 'string') {
+            result = from.map(c => getChoice(c, c, str))
+        }
+        else {
+            result = (from as LookupItem[]).map(c => getChoice(c.key, c.val, str))
+        }
+    }
+    else {
+        result = Object.keys(from).map(c => getChoice(c, from[c], str))
+    }
+
+    if (!required)
+        result = [{key: null, val: ''}, ...result]
+
+    return result
+}
+
 export class SimpleFormService implements FormService {
     getValidationResult(errorMessage?: string): ValidationResult {
         return {
@@ -97,23 +121,11 @@ export class SimpleFormService implements FormService {
             ...this.guessConfig(fieldValue, type, fieldConfig),
             ...fieldConfig,
         } as FieldConfig
+
         if (this._str.isEmpty(result.label))
             result.label = this._str.humanized_i18n(fieldId)
-        if (result?.choices == null)
-            result.choices = []
-        else if (result.choices?.constructor === Array) {
-            if (result.choices.length == 0)
-                result.choices = []
-            else if (typeof result.choices[0] === 'string') {
-                result.choices = result.choices.map(c => getChoice(c, c, this._str))
-            }
-            else {
-                result.choices = (result.choices as LookupItem[]).map(c => getChoice(c.key, c.val, this._str))
-            }
-        }
-        else {
-            result.choices = Object.keys(result.choices).map(c => getChoice(c, result.choices[c], this._str))
-        }
+
+        result.choices = getChoices(result.choices, result.required, this._str)
 
         return result
     }
@@ -186,9 +198,9 @@ export class SimpleFormService implements FormService {
     }
 
     guessConfig(val: any, fieldType: FormFieldType, _?: PartialFieldConfig): PartialFieldConfig {
-        let result: Partial<FieldConfig> = {}
+        let result: PartialFieldConfig = {}
         if (val != null && val.constructor === Array && fieldType == 'radio') {
-            result.choices = val.map(c => ({key: c, val: this._str.humanize(c)}))
+            result.choices = val.map(c => getChoice(c, c, globalThis.c('string-utils')))
             result.multiple = true
         }
         if (fieldType == 'password')

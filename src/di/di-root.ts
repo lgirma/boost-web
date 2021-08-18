@@ -13,7 +13,7 @@ import {
     PageResourcesService,
     ToastService,
     FormService,
-    DataTableService
+    DataTableService, CrudService
 } from "../ui";
 import {AppService} from "../app";
 import {StringUtils} from "../common";
@@ -40,7 +40,8 @@ export type ContainerServices = {
     [others: string]: any,
     form: FormService
     'data-table': DataTableService
-    lookup: LookupService
+    lookup: LookupService,
+    crud: CrudService
 }
 
 export type ContainerType = <K extends keyof ContainerServices>(name: K) => ContainerServices[K]

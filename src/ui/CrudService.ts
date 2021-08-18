@@ -1,60 +1,72 @@
-import {DataTableOptionsFrom} from "./DataTableModels";
-import {PartialFormConfig} from "./FormModels";
-import {DataSource} from "../data";
-
-export interface CrudOptionsFrom {
-    dataTable: DataTableOptionsFrom
-
-    // Form configs
-    createForm?: PartialFormConfig
-    updateForm?: PartialFormConfig
-    filterForm?: PartialFormConfig
-
-    // Methods
-    getNew?: () => any
-    getFilter?: () => any
-
-    // Data sources
-    detailSource?: DataSource
-    updateUrl?: string
-    createUrl?: string
-
-    // Misc
-    id: string
-    name?: string
-    namePlural?: string
-}
-
-export interface CrudOptions {
-    dataTable: DataTableOptionsFrom
-    createForm: PartialFormConfig
-    updateForm: PartialFormConfig
-    filterForm: PartialFormConfig
-    getNew: () => any
-    getFilter: () => any
-    detailSource: DataSource
-    updateUrl: string
-    createUrl: string
-    id: string
-    name: string
-    namePlural: string
-}
-
-export const enum CrudPages {
-    NONE, LIST, CREATE, EDIT
-}
-
-export interface CrudState {
-    options: CrudOptions
-    currentPage: CrudPages
-    updatedObj: any
-    createdObj: any
-    filterObj: any
-}
+import {CrudConfig, CrudOptions, CrudOptionsFrom} from "./CrudModels";
+import {ConfigService} from "../config";
+import {HttpPagedDataSource} from "../data";
+import {DataTableOptions} from "./DataTableModels";
+import {deepMerge, StringUtils} from "../common";
 
 export interface CrudService {
-    goto(page: CrudPages)
-    create(): Promise<any>
-    update(): Promise<any>
-    createConfig(from: CrudOptionsFrom): CrudOptions
+    /*goto(page: CrudPages, state: CrudState): Promise<CrudState>
+    create(state: CrudState): Promise<CrudState>
+    update(state: CrudState): Promise<CrudState>
+    delete(state: CrudState): Promise<CrudState>*/
+    createConfig(from: CrudOptionsFrom): Promise<CrudOptions>
+}
+
+export class CrudServiceImpl implements CrudService {
+    private _config: CrudConfig
+    /*create(state: CrudState): Promise<CrudState> {
+        return Promise.resolve(undefined);
+    }
+
+    delete(state: CrudState): Promise<CrudState> {
+        return Promise.resolve(undefined);
+    }
+
+    goto(page: CrudPages, state: CrudState): Promise<CrudState> {
+        return Promise.resolve(undefined);
+    }
+
+    update(state: CrudState): Promise<CrudState> {
+        return Promise.resolve(undefined);
+    }*/
+
+    async createConfig(from: CrudOptionsFrom): Promise<CrudOptions> {
+        if (from == null || from.id == null)
+            throw 'Crud: Source config and ID cannot be null'
+        const id = from.id
+        let dataTableOpts = (from.dataTable ?? {}) as DataTableOptions
+        dataTableOpts.dataSource ??= new HttpPagedDataSource(this._config.getListUrl(from.id))
+
+        return {
+            ...from,
+            dataTable: dataTableOpts,
+            createUrl: from.createUrl ?? this._config.getCreateUrl(id),
+            updateUrl: from.updateUrl ?? (r => this._config.getUpdateUrl(id, r)),
+            deleteUrl: from.deleteUrl ?? (r => this._config.getDeleteUrl(id, r)),
+            detailUrl: from.detailUrl ?? (r => this._config.getDetailUrl(id, r)),
+            name: from.name ?? this._str.humanized_i18n(id),
+            namePlural: from.namePlural ?? (this._str.humanized_i18n(id) + ' - ' + this._str.humanized_i18n('LIST')),
+            filterForm: deepMerge({
+                fieldsConfig: {
+                    sort: {hidden: true},
+                    pageSize: {hidden: true},
+                    currentPage: {hidden: true}
+                }
+            }, from.filterForm)
+        } as CrudOptions
+    }
+
+    constructor(config: ConfigService, private _str: StringUtils) {
+        const initial = config.get<Partial<CrudConfig>>('crud') ?? {}
+        this._config = config.get<CrudConfig>('crud', {
+            idField: 'id',
+            getCreateUrl: id => `${id}/create`,
+            getDeleteUrl: (id, row) => `${id}/delete/${row[initial.idField ?? 'id']}`,
+            getUpdateUrl: (id, row) => `${id}/update/${row[initial.idField ?? 'id']}`,
+            getDetailUrl: (id, params) => `${id}/detail/${params}`,
+            getListUrl: id => `${id}/list`,
+            ...initial
+        })
+    }
+
 }

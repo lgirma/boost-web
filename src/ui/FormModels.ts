@@ -17,7 +17,7 @@ export interface FieldConfig extends Partial<HTMLInputElement> {
     customOptions?: any,
     maxlength?: string
     multiple?: boolean
-    choices: string[] | Dict<string> | LookupItem[]
+    choices: LookupItem[]
     variation?: string
     hideLabel: boolean
     scale: number
@@ -127,7 +127,9 @@ export const SimpleTextTypes : FormFieldType[] = [
     'text', 'password', 'date', 'datetime-local', 'email', 'search', 'url', 'time', 'month', 'week', 'tel'
 ]
 
-export type PartialFieldConfig = Partial<FieldConfig>
+export type PartialFieldConfig = Omit<Partial<FieldConfig>, 'choices'> & {
+    choices?: string[] | Dict<string> | LookupItem[]
+}
 export type PartialFormConfig = Omit<Partial<FormConfig>, 'fieldsConfig'> & {
     fieldsConfig?: Dict<Partial<FieldConfig>>
 }
