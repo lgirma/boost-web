@@ -25,8 +25,10 @@ export class Simplei18nService implements i18nService {
         let result = resource[key];
         if (result === undefined && currLang != this._config.defaultLocale)
             result = this._config.translations[this._config.defaultLocale][key];
-        for (let i = 0; i < args.length; i++) {
-            result = result.replace(`{${i}}`, args[i]);
+        if (result != null) {
+            for (let i = 0; i < args.length; i++) {
+                result = result.replace(`{${i}}`, args[i]);
+            }
         }
         return result
     }

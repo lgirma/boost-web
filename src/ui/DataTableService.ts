@@ -66,8 +66,8 @@ export class DataTableStateService implements DataTableService {
         return {
             canGoFirst: filter.currentPage != 0,
             canGoPrev: filter.currentPage != 0,
-            canGoNext: filter.currentPage != data.pageCount - 1,
-            canGoLast: filter.currentPage != data.pageCount - 1
+            canGoNext: filter.currentPage < data.pageCount - 1,
+            canGoLast: filter.currentPage < data.pageCount - 1
         }
     }
 

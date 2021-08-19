@@ -62,7 +62,7 @@ export class CrudServiceImpl implements CrudService {
             idField: 'id',
             getCreateUrl: id => `${id}/create`,
             getDeleteUrl: (id, row) => `${id}/delete/${row[initial.idField ?? 'id']}`,
-            getUpdateUrl: (id, row) => `${id}/update/${row[initial.idField ?? 'id']}`,
+            getUpdateUrl: (id, _) => `${id}/update`,
             getDetailUrl: (id, params) => `${id}/detail/${params}`,
             getListUrl: id => `${id}/list`,
             ...initial

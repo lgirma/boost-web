@@ -2,12 +2,12 @@ import {DataTableOptionsFrom} from "./DataTableModels";
 import {PartialFormConfig} from "./FormModels";
 
 export interface CrudConfig {
-    idField: string
-    getListUrl: (id: string) => string
-    getCreateUrl: (id: string) => string
-    getDetailUrl: (id: string, params: string) => string
-    getDeleteUrl: (id: string, row: any) => string
-    getUpdateUrl: (id: string, row: any) => string
+    idField?: string
+    getListUrl?: (id: string) => string
+    getCreateUrl?: (id: string) => string
+    getDetailUrl?: (id: string, params: string) => string
+    getDeleteUrl?: (id: string, row: any) => string
+    getUpdateUrl?: (id: string, row: any) => string
 }
 
 export interface CrudOptionsFrom {
