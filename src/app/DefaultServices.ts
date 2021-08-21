@@ -9,6 +9,7 @@ import {
     WindowNavigationService,
     ToastStateService, SimpleFormService, DataTableStateService, LookupServiceImpl, CrudServiceImpl
 } from "..";
+import {ScreenServiceImpl} from "../ui/ScreenService";
 
 export function SetupDefaultServices(services: ContainerBuilder<any>, config?: Partial<StaticConfig>) {
 services.add('config', () => new SimpleConfigService(config))
@@ -29,5 +30,6 @@ services.add('config', () => new SimpleConfigService(config))
     .add('api-error', c => new SimpleApiErrorHandlerService(c('config'), c('toast')))
     .add('data-table', c => new DataTableStateService(c('form'), c('string-utils'), c('config')))
     .add('lookup', c => new LookupServiceImpl(c('config')))
+    .add('screen', () => new ScreenServiceImpl())
     .add('crud', c => new CrudServiceImpl(c('config'), c('string-utils')))
 }

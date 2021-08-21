@@ -131,5 +131,5 @@ export type PartialFieldConfig = Omit<Partial<FieldConfig>, 'choices'> & {
     choices?: string[] | Dict<string> | LookupItem[]
 }
 export type PartialFormConfig = Omit<Partial<FormConfig>, 'fieldsConfig'> & {
-    fieldsConfig?: Dict<Partial<FieldConfig>>
+    fieldsConfig?: Dict<PartialFieldConfig>
 }

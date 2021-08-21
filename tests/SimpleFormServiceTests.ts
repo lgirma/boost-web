@@ -35,15 +35,15 @@ describe('Form service tests', () => {
             fieldsConfig: {
                 f1: { type: "radio", choices: ['alpha', 'beta'] },
                 f2: { type: "radio", choices: {KEY1: 'firstKey', KEY2: 'SECOND_KEY'} },
-                f3: { type: "radio", choices: [{value: 1, label: 'M'}, {value: 2, label: 'F'}] },
+                f3: { type: "radio", choices: [{key: 1, val: 'M'}, {key: 2, val: 'F'}] },
             }
         })
         expect(config.fieldsConfig.f1.choices).to.deep.equal(
-            [{value: 'alpha', label: 'Alpha'}, {value: 'beta', label: 'Beta'}]);
+            [{key: 'alpha', val: 'Alpha'}, {key: 'beta', val: 'Beta'}]);
         expect(config.fieldsConfig.f2.choices).to.deep.equal(
-            [{value: 'KEY1', label: 'First Key'}, {value: 'KEY2', label: 'ሁለተኛው ቍልፍ'}]);
+            [{key: 'KEY1', val: 'First Key'}, {key: 'KEY2', val: 'ሁለተኛው ቍልፍ'}]);
         expect(config.fieldsConfig.f3.choices).to.deep.equal(
-            [{value: 1, label: 'ወ'}, {value: 2, label: 'F'}]);
+            [{key: 1, val: 'ወ'}, {key: 2, val: 'F'}]);
     });
 
     it('Sets up formConfig config properly', () => {

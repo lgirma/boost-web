@@ -60,6 +60,13 @@ export class DataTableStateService implements DataTableService {
                 ...result.columns[key]
             }
         }
+        if (this._str.isEmpty(result.titleField)) {
+            const nonHiddenFields = Object.keys(result.columns).filter(k => !result.columns[k].hidden)
+            const titleFields = ['title', 'name', 'firstName', 'fullName']
+            result.titleField = nonHiddenFields.find(f => titleFields.indexOf(f) > -1)
+            if (result.titleField == null)
+                result.titleField = nonHiddenFields[0]
+        }
         return result
     }
     getPagination(filter: DataTableFilter, data: PagedData): DataTablePagination {

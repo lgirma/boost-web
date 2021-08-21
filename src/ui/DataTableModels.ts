@@ -15,6 +15,7 @@ export interface DataTableOptions {
     columns: Dict<DataTableColumn>
     dataSource: PagedDataSource
     selectableRows: boolean
+    titleField: string
     $$isComplete: boolean
 }
 
