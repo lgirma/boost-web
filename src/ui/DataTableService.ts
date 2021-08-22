@@ -66,6 +66,10 @@ export class DataTableStateService implements DataTableService {
             result.titleField = nonHiddenFields.find(f => titleFields.indexOf(f) > -1)
             if (result.titleField == null)
                 result.titleField = nonHiddenFields[0]
+            result.columns = {
+                [result.titleField]: result.columns[result.titleField],
+                ...result.columns
+            }
         }
         return result
     }

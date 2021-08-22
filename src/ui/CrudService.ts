@@ -41,6 +41,7 @@ export class CrudServiceImpl implements CrudService {
             ...from,
             dataTable: dataTableOpts,
             createUrl: from.createUrl ?? this._config.getCreateUrl(id),
+            exportUrl: from.exportUrl ?? this._config.getExportUrl(id),
             updateUrl: from.updateUrl ?? (r => this._config.getUpdateUrl(id, r)),
             deleteUrl: from.deleteUrl ?? (r => this._config.getDeleteUrl(id, r)),
             detailUrl: from.detailUrl ?? (r => this._config.getDetailUrl(id, r)),
@@ -65,6 +66,7 @@ export class CrudServiceImpl implements CrudService {
             getUpdateUrl: (id, _) => `${id}/update`,
             getDetailUrl: (id, params) => `${id}/detail/${params}`,
             getListUrl: id => `${id}/list`,
+            getExportUrl: id => `${id}/export`,
             ...initial
         })
     }

@@ -4,6 +4,7 @@ import {PartialFormConfig} from "./FormModels";
 export interface CrudConfig {
     idField?: string
     getListUrl?: (id: string) => string
+    getExportUrl?: (id: string) => string
     getCreateUrl?: (id: string) => string
     getDetailUrl?: (id: string, params: string) => string
     getDeleteUrl?: (id: string, row: any) => string
@@ -28,6 +29,7 @@ export interface CrudOptionsFrom {
     updateUrl?: (row: any) => string
     deleteUrl?: (row: any) => string
     createUrl?: string
+    exportUrl?: string
 
     // Misc
     name?: string
@@ -50,6 +52,7 @@ export interface CrudOptions {
     updateUrl: (row: any) => string
     deleteUrl: (row: any) => string
     createUrl: string
+    exportUrl: string
     id: string
     name: string
     namePlural: string
