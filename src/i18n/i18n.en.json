@@ -20,5 +20,7 @@
   "FAILED": "Failed",
   "WARNING": "Warning",
 
-  "MISC": "Miscellaneous"
+  "MISC": "Miscellaneous",
+  "CONFIRM": "Confirm",
+  "ARE_YOU_SURE": "Are you sure?"
 }

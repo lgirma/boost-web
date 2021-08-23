@@ -1,6 +1,7 @@
 import {FormFieldType} from "./FormModels";
 import {Dict} from "../common";
 import {FilterAdapter, PagedDataAdapter, PagedDataSource} from "../data";
+import {MessageType} from "./Common";
 
 export interface DataTableConfig {
     filterAdapter?: FilterAdapter
@@ -16,6 +17,7 @@ export interface DataTableOptions {
     dataSource: PagedDataSource
     selectableRows: boolean
     titleField: string
+    commands: DataTableCommand[]
     $$isComplete: boolean
 }
 
@@ -34,4 +36,18 @@ export interface DataTablePagination {
     canGoPrev: boolean
     canGoNext: boolean
     canGoLast: boolean
+}
+
+export interface DataTableCommand {
+    id: string
+    label: string
+    iconKey?: string
+    iconType?: string
+    type?: MessageType
+    condition?: (selectedRows?: any[]) => boolean
+    invoke: (selectedRows?: any[]) => void
+    linkTo?: string
+    confirm?: boolean
+    class?: string
+    style?: string
 }

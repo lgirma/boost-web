@@ -35,11 +35,13 @@ export class CrudServiceImpl implements CrudService {
             throw 'Crud: Source config and ID cannot be null'
         const id = from.id
         let dataTableOpts = (from.dataTable ?? {}) as DataTableOptions
-        dataTableOpts.dataSource ??= new HttpPagedDataSource(this._config.getListUrl(from.id))
 
         return {
             ...from,
-            dataTable: dataTableOpts,
+            dataTable: deepMerge({
+                dataSource: new HttpPagedDataSource(this._config.getListUrl(from.id)),
+                commands: []
+            } as any, dataTableOpts),
             createUrl: from.createUrl ?? this._config.getCreateUrl(id),
             exportUrl: from.exportUrl ?? this._config.getExportUrl(id),
             updateUrl: from.updateUrl ?? (r => this._config.getUpdateUrl(id, r)),

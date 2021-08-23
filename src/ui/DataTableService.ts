@@ -27,7 +27,6 @@ export class DataTableStateService implements DataTableService {
             this._config.filterAdapter,
             this._config.pagedDataAdapter)
     }
-
     async getConfig(options: DataTableOptionsFrom): Promise<DataTableOptions> {
         if (options.$$isComplete)
             return options as any
@@ -35,6 +34,7 @@ export class DataTableStateService implements DataTableService {
             dataSource: null,
             columns: {},
             selectableRows: true,
+            commands: [],
             ...options,
             $$isComplete: true
         }
