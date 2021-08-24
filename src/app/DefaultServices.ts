@@ -10,6 +10,7 @@ import {
     ToastStateService, SimpleFormService, DataTableStateService, LookupServiceImpl, CrudServiceImpl
 } from "..";
 import {ScreenServiceImpl} from "../ui/ScreenService";
+import {FileServiceImpl} from "../file";
 
 export function SetupDefaultServices(services: ContainerBuilder<any>, config?: Partial<StaticConfig>) {
 services.add('config', () => new SimpleConfigService(config))
@@ -32,4 +33,5 @@ services.add('config', () => new SimpleConfigService(config))
     .add('lookup', c => new LookupServiceImpl(c('config')))
     .add('screen', () => new ScreenServiceImpl())
     .add('crud', c => new CrudServiceImpl(c('config'), c('string-utils')))
+    .add('file', c => new FileServiceImpl(c('http'), c('config')))
 }

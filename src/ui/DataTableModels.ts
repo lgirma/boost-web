@@ -50,4 +50,5 @@ export interface DataTableCommand {
     confirm?: boolean
     class?: string
     style?: string
+    shouldSelect?: boolean
 }

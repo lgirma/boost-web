@@ -23,14 +23,14 @@ export class FetchHttpService extends HttpServiceBase {
         config = config || {};
         config.method = method || 'get';
         config.headers = config.headers || {};
-        config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
         body ??= config.body
         if (body != null) {
             if (body.constructor === globalThis.FormData) {
-                config.headers['Content-Type'] = undefined
+                //config.headers['Content-Type'] = undefined
                 config.body = body
             }
             else {
+                config.headers['Content-Type'] ??= 'application/json';
                 config.body = JSON.stringify(body)
             }
         }
