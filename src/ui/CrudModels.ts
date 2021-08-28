@@ -18,6 +18,7 @@ export interface CrudOptionsFrom {
     // Form configs
     createForm?: PartialFormConfig
     updateForm?: PartialFormConfig
+    detailForm?: PartialFormConfig
     filterForm?: PartialFormConfig
 
     // Methods
@@ -45,6 +46,7 @@ export interface CrudOptions {
     dataTable: DataTableOptionsFrom
     createForm: PartialFormConfig
     updateForm: PartialFormConfig
+    detailForm: PartialFormConfig
     filterForm: PartialFormConfig
     getNew: () => any
     getFilter: () => any

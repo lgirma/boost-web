@@ -79,9 +79,11 @@ export class SimpleFormService implements FormService {
             includeSubmitButton: false,
             autoValidate: true,
             noValidate: true,
+            skip: [],
             ..._config,
             fieldsConfig: {
-                ...Object.keys(forObject).reduce((a, fieldId) => ({...a, [fieldId]: null}), {}),
+                ...Object.keys(forObject).filter(k => (_config.skip ?? []).indexOf(k) == -1)
+                    .reduce((a, fieldId) => ({...a, [fieldId]: null}), {}),
                 ..._config.fieldsConfig
             },
             $$isComplete: true
@@ -104,7 +106,7 @@ export class SimpleFormService implements FormService {
         }
 
         for (const fieldId in forObject) {
-            if (!forObject.hasOwnProperty(fieldId))
+            if (!forObject.hasOwnProperty(fieldId) || config.skip.indexOf(fieldId) > -1)
                 continue
             config.fieldsConfig[fieldId] = this.createFieldConfig(fieldId, forObject[fieldId], config.fieldsConfig[fieldId], config)
         }

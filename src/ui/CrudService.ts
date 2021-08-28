@@ -5,30 +5,11 @@ import {DataTableOptions} from "./DataTableModels";
 import {deepMerge, StringUtils} from "../common";
 
 export interface CrudService {
-    /*goto(page: CrudPages, state: CrudState): Promise<CrudState>
-    create(state: CrudState): Promise<CrudState>
-    update(state: CrudState): Promise<CrudState>
-    delete(state: CrudState): Promise<CrudState>*/
     createConfig(from: CrudOptionsFrom): Promise<CrudOptions>
 }
 
 export class CrudServiceImpl implements CrudService {
     private _config: CrudConfig
-    /*create(state: CrudState): Promise<CrudState> {
-        return Promise.resolve(undefined);
-    }
-
-    delete(state: CrudState): Promise<CrudState> {
-        return Promise.resolve(undefined);
-    }
-
-    goto(page: CrudPages, state: CrudState): Promise<CrudState> {
-        return Promise.resolve(undefined);
-    }
-
-    update(state: CrudState): Promise<CrudState> {
-        return Promise.resolve(undefined);
-    }*/
 
     async createConfig(from: CrudOptionsFrom): Promise<CrudOptions> {
         if (from == null || from.id == null)
@@ -55,7 +36,8 @@ export class CrudServiceImpl implements CrudService {
                     pageSize: {hidden: true},
                     currentPage: {hidden: true}
                 }
-            }, from.filterForm)
+            }, from.filterForm),
+            detailForm: deepMerge(from.detailForm ?? from.updateForm ?? {}, {readonly: true})
         } as CrudOptions
     }
 

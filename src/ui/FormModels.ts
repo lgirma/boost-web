@@ -54,6 +54,10 @@ export interface FormConfig extends Partial<HTMLFormElement>/*, WebFormEvents*/ 
      * Whether to validate the form automatically up on submission.
      */
     autoValidate?: boolean
+    /**
+     * List of field ids to skip
+     */
+    skip?: string[]
 }
 
 export interface ValidationResult {

@@ -45,4 +45,11 @@ describe('DefaultStringUtils tests', () => {
         expect(_str.fmt('ab', '1', '2')).to.equal('ab');
     })
 
+    it('Pads zeros properly', () => {
+        expect(_str.padZeros(10, 4)).to.equal('0010');
+        expect(_str.padZeros(5, 3)).to.equal('005');
+        expect(_str.padZeros(325, 3)).to.equal('325');
+        expect(_str.padZeros(45000, 3)).to.equal('45000');
+    })
+
 })

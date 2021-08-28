@@ -8,11 +8,14 @@ export interface StringUtils {
     getFriendlyFileSize(bytes: number): string
     randomHash(): string
     fmt(str: string, ...args: any[]): string
+    padZeros(n: number, width?: number): string
 }
 
 export class DefaultStringUtils implements StringUtils {
 
     humanize(str: string) {
+        if (this.isEmpty(str))
+            return ''
         return str
             .replace(/^[\s_]+|[\s_]+$/g, '')
             .replace(/[_\s\-]+/g, ' ')
@@ -60,6 +63,19 @@ export class DefaultStringUtils implements StringUtils {
             result = result.replace(`{${i}}`, args[i]);
         }
         return result
+    }
+
+    padZeros(n: number, width = 5): string
+    {
+        const numStr = n.toString()
+        if (numStr.padStart != null)
+            return numStr.padStart(width, "0")
+        width -= numStr.length;
+        if (width > 0)
+        {
+            return new Array( width + (/\./.test( numStr ) ? 2 : 1) ).join( '0' ) + n;
+        }
+        return numStr;
     }
 
     constructor(private _i18n: i18nService) {}
