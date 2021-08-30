@@ -13,7 +13,8 @@ import {
     PageResourcesService,
     ToastService,
     FormService,
-    DataTableService, CrudService
+    DataTableService, CrudService,
+    ModalFormService
 } from "../ui";
 import {AppService} from "../app";
 import {StringUtils} from "../common";
@@ -45,7 +46,8 @@ export type ContainerServices = {
     lookup: LookupService,
     crud: CrudService,
     screen: ScreenService,
-    file: FileService
+    file: FileService,
+    'modal-form': ModalFormService
 }
 
 export type ContainerType = <K extends keyof ContainerServices>(name: K) => ContainerServices[K]

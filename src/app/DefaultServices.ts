@@ -7,7 +7,8 @@ import {
     SvelteAppService,
     SimpleConfigService, Simplei18nService, SimpleSecurityService, StaticConfig, WebPageResourcesService,
     WindowNavigationService,
-    ToastStateService, SimpleFormService, DataTableStateService, LookupServiceImpl, CrudServiceImpl
+    ToastStateService, SimpleFormService, DataTableStateService, LookupServiceImpl, CrudServiceImpl,
+    ModalFormStateService
 } from "..";
 import {ScreenServiceImpl} from "../ui/ScreenService";
 import {FileServiceImpl} from "../file";
@@ -34,4 +35,5 @@ services.add('config', () => new SimpleConfigService(config))
     .add('screen', () => new ScreenServiceImpl())
     .add('crud', c => new CrudServiceImpl(c('config'), c('string-utils')))
     .add('file', c => new FileServiceImpl(c('http'), c('config')))
+    .add('modal-form', () => new ModalFormStateService())
 }
