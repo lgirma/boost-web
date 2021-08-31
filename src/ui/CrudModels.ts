@@ -9,6 +9,7 @@ export interface CrudConfig {
     getDetailUrl?: (id: string, params: string) => string
     getDeleteUrl?: (id: string, row: any) => string
     getUpdateUrl?: (id: string, row: any) => string
+    getDeleteAllUrl?: (id: string) => string
 }
 
 export interface CrudOptionsFrom {
@@ -29,6 +30,7 @@ export interface CrudOptionsFrom {
     detailUrl?: (params: string) => string
     updateUrl?: (row: any) => string
     deleteUrl?: (row: any) => string
+    deleteAllUrl?: string
     createUrl?: string
     exportUrl?: string
 
@@ -53,6 +55,7 @@ export interface CrudOptions {
     detailUrl: (params: string) => string
     updateUrl: (row: any) => string
     deleteUrl: (row: any) => string
+    deleteAllUrl: string
     createUrl: string
     exportUrl: string
     id: string
