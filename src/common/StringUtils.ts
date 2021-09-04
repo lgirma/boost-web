@@ -8,6 +8,7 @@ export interface StringUtils {
     getFriendlyFileSize(bytes: number): string
     randomHash(): string
     fmt(str: string, ...args: any[]): string
+    xssSafe(str: string): string
     padZeros(n: number, width?: number): string
 }
 
@@ -63,6 +64,16 @@ export class DefaultStringUtils implements StringUtils {
             result = result.replace(`{${i}}`, args[i]);
         }
         return result
+    }
+    xssSafe(str: string) {
+        if (str == null)
+            return str
+        return str.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#x27')
+            .replace(/\//g, '&#x2F');
     }
 
     padZeros(n: number, width = 5): string

@@ -12,6 +12,7 @@ export type LookupAdapter = Adapter<LookupItem[]>
 export interface LookupService {
     getFrom(dataSource: DataSource): Promise<LookupItem[]>
     get(id: string): Promise<LookupItem[]>
+    fromEnumValues(values: string[], zeroBased?: boolean): LookupItem[]
 }
 
 export interface LookupConfig {
@@ -35,5 +36,10 @@ export class LookupServiceImpl implements LookupService {
             adapter: x => x,
             getUrl: id => `lookup/${id}-list`
         })
+    }
+
+    fromEnumValues(values: string[], zeroBased = true): LookupItem[] {
+        return values
+            .map((v, i) => ({key: i + (zeroBased ? 0 : 1), val: v}))
     }
 }

@@ -23,12 +23,15 @@ export class ConstDataSource implements DataSource {
 
 export class HttpDataSource implements DataSource {
     private _options: HttpDataSourceOptions
-    constructor(url: string, options?: Partial<HttpDataSourceOptions>) {
+    constructor(url: string, body?: any, options?: Partial<HttpDataSourceOptions>) {
         this._options = {
             url,
             errorHandler: options?.errorHandler ?? (() => ({})),
-            httpOptions: options?.httpOptions ?? {},
-            method: options?.method ?? 'get'
+            httpOptions: {
+                ...options?.httpOptions,
+                body: body ?? options?.httpOptions?.body
+            },
+            method: options?.method ?? (body == null ? 'get' : 'post'),
         }
     }
 
