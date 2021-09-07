@@ -80,6 +80,7 @@ export class SimpleFormService implements FormService {
             autoValidate: true,
             noValidate: true,
             skip: [],
+            groups: {},
             ..._config,
             fieldsConfig: {
                 ...Object.keys(forObject).filter(k => (_config.skip ?? []).indexOf(k) == -1)
@@ -121,8 +122,12 @@ export class SimpleFormService implements FormService {
         let result = {
             ...this.getDefaultFieldConfig(fieldId, type, formConfig),
             ...this.guessConfig(fieldValue, type, fieldConfig),
-            ...fieldConfig,
+            ...fieldConfig
         } as FieldConfig
+
+        if (formConfig && formConfig.groups != null)
+            result.group = Object.keys(formConfig.groups).find(g => formConfig.groups[g].indexOf(fieldId) > -1)
+                ?? fieldConfig?.group
 
         if (this._str.isEmpty(result.label))
             result.label = this._str.humanized_i18n(fieldId)

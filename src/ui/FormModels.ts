@@ -58,6 +58,7 @@ export interface FormConfig extends Partial<HTMLFormElement>/*, WebFormEvents*/ 
      * List of field ids to skip
      */
     skip?: string[]
+    groups?: Dict<string[]>
 }
 
 export interface ValidationResult {
