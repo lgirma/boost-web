@@ -8,6 +8,7 @@ export interface StringUtils {
     getFriendlyFileSize(bytes: number): string
     randomHash(): string
     fmt(str: string, ...args: any[]): string
+    fmtHtml(str: string, ...args: any[]): string
     xssSafe(str: string): string
     padZeros(n: number, width?: number): string
 }
@@ -62,6 +63,13 @@ export class DefaultStringUtils implements StringUtils {
         let result = str
         for (let i = 0; i < args.length; i++) {
             result = result.replace(`{${i}}`, args[i]);
+        }
+        return result
+    }
+    fmtHtml(str: string, ...args: any[]) {
+        let result = str
+        for (let i = 0; i < args.length; i++) {
+            result = result.replace(`{${i}}`, this.xssSafe(args[i]));
         }
         return result
     }
