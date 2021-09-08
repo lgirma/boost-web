@@ -45,6 +45,14 @@ describe('DefaultStringUtils tests', () => {
         expect(_str.fmt('ab', '1', '2')).to.equal('ab');
     })
 
+    it('Can escape html string to prevent xss', () => {
+        expect(_str.xssSafe('<i></i>')).to.equal('&lt;i&gt;&lt;&#x2Fi&gt;');
+    })
+
+    it('Can escape part of an html template to prevent xss', () => {
+        expect(_str.fmtHtml('a{0}b{1}', '<i></i>', '2')).to.equal('a&lt;i&gt;&lt;&#x2Fi&gt;b2');
+    })
+
     it('Pads zeros properly', () => {
         expect(_str.padZeros(10, 4)).to.equal('0010');
         expect(_str.padZeros(5, 3)).to.equal('005');

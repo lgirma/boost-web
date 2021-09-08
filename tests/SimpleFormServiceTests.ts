@@ -30,12 +30,25 @@ describe('Form service tests', () => {
         expect(_form.guessType('email', '')).to.equal('email');
     });
 
+    it('Adds empty choice for non-required fields', () => {
+        let config = _form.createFormConfig({}, {
+            fieldsConfig: {
+                id: { type: "radio", choices: ['alpha', 'beta'] },
+                role: { type: "radio", choices: ['guest', 'admin'], required: true },
+            }
+        })
+        expect(config.fieldsConfig.id.choices).to.deep.equal(
+            [{key: null, val: ""}, {key: 'alpha', val: 'Alpha'}, {key: 'beta', val: 'Beta'}]);
+        expect(config.fieldsConfig.role.choices).to.deep.equal(
+            [{key: 'guest', val: 'Guest'}, {key: 'admin', val: 'Admin'}]);
+    });
+
     it('Sets up field choices correctly', () => {
         let config = _form.createFormConfig({}, {
             fieldsConfig: {
-                f1: { type: "radio", choices: ['alpha', 'beta'] },
-                f2: { type: "radio", choices: {KEY1: 'firstKey', KEY2: 'SECOND_KEY'} },
-                f3: { type: "radio", choices: [{key: 1, val: 'M'}, {key: 2, val: 'F'}] },
+                f1: { type: "radio", choices: ['alpha', 'beta'], required: true },
+                f2: { type: "radio", choices: {KEY1: 'firstKey', KEY2: 'SECOND_KEY'}, required: true },
+                f3: { type: "radio", choices: [{key: 1, val: 'M'}, {key: 2, val: 'F'}], required: true },
             }
         })
         expect(config.fieldsConfig.f1.choices).to.deep.equal(

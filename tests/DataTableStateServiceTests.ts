@@ -53,6 +53,33 @@ describe('DataTableStateService tests', () => {
         expect(opts.columns.age.header).to.equal('Age')
     })
 
+    it('Skips skipped columns', async () => {
+        const opts = await _dataTable.getConfig({
+            skip: ['skipped'],
+            dataSource: GetMockDataSource([{name: '', age: 5, skipped: true}])
+        })
+        expect(opts.columns.skipped).to.be.undefined
+        expect(opts.columns.name).to.not.be.undefined
+        expect(opts.columns.age).to.not.be.undefined
+    })
+
+    it('Adds computed columns', async () => {
+        const opts = await _dataTable.getConfig({
+            skip: ['skipped'],
+            dataSource: GetMockDataSource([{name: '', age: 5, skipped: true}]),
+            columns: {
+                twiceAge: {
+                    value: row => 2*row.age
+                }
+            }
+        })
+        expect(opts.columns.skipped).to.be.undefined
+        expect(opts.columns.name).to.not.be.undefined
+        expect(opts.columns.age).to.not.be.undefined
+        expect(opts.columns.twiceAge).to.not.be.undefined
+        expect(opts.columns.twiceAge.type).to.equal('number')
+    })
+
     it('Generates pagination info properly', async () => {
         async function getPagination(_filter: Partial<DataTableFilter>) {
             const filter = {..._dataTable.getDefaultFilter(), ..._filter}
