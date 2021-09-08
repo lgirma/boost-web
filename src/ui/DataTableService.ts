@@ -35,7 +35,8 @@ export class DataTableStateService implements DataTableService {
             columns: {},
             selectableRows: true,
             commands: [],
-            ...options,
+            skip: [],
+            ...options as any,
             $$isComplete: true
         }
         result.columns ??= {}
@@ -45,17 +46,22 @@ export class DataTableStateService implements DataTableService {
         if (peekRows.length == 0)
             return result
         const row = peekRows[0]
-        result.columns = Object.keys(row)
+        result.columns = [...new Set([...Object.keys(row), ...Object.keys(result.columns)])]
+            .filter(col => result.skip.indexOf(col) == -1)
             .reduce((prev, colKey) => ({...prev, [colKey]: {...result.columns?.[colKey]}}), {})
-        for (const key in row) {
-            const config = this._formService.createFieldConfig(key, row[key])
+        for (const key in result.columns) {
+            if (result.skip.indexOf(key) > -1)
+                continue
+            result.columns[key] ??= {} as any
+            const config = this._formService.createFieldConfig(key,
+                result.columns[key].value != null ? result.columns[key].value(row) : row[key])
             result.columns[key] = {
                 type: config.type,
                 id: config.id,
                 header: this._str.humanized_i18n(key),
                 hidden: false,
                 isHeaderHtml: false,
-                sortable: true,
+                sortable: result.columns[key].value == null,
                 template: null,
                 ...result.columns[key]
             }

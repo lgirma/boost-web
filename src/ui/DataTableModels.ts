@@ -8,12 +8,14 @@ export interface DataTableConfig {
     pagedDataAdapter?: PagedDataAdapter
 }
 
-export type DataTableOptionsFrom = Partial<DataTableOptions> &
-    Omit<DataTableOptions, 'dataSource'> & { dataSource: PagedDataSource } &
-    Omit<DataTableOptions, 'columns'> & { columns: Dict<Partial<DataTableColumn>> }
+export type DataTableOptionsFrom = Omit<Partial<DataTableOptions>, 'dataSource' | 'columns'> & {
+    dataSource: PagedDataSource
+    columns?: Dict<Partial<DataTableColumn>>
+}
 
 export interface DataTableOptions {
     columns: Dict<DataTableColumn>
+    skip: string[]
     dataSource: PagedDataSource
     selectableRows: boolean
     titleField: string
@@ -28,6 +30,7 @@ export interface DataTableColumn {
     sortable: boolean
     hidden: boolean
     type: FormFieldType
+    value?: (row: any) => any
     template: null | ((cellData: any, row?: any) => any)
 }
 
