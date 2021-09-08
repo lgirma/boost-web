@@ -43,8 +43,3 @@ export class ContainerBuilder<T extends { [P in keyof T]: any }> {
 export function Container() {
     return new ContainerBuilder()
 }
-
-export function lazyC(serviceName: string) {
-    let service = null
-    return () => service == null ? service = globalThis.c(serviceName) : service
-}

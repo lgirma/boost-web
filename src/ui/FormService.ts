@@ -46,7 +46,7 @@ function getChoices(from: string[] | Dict<string> | LookupItem[], required: bool
         result = Object.keys(from).map(c => getChoice(c, from[c], str))
     }
 
-    if (!required)
+    if (!required && result.find(i => i.key == null) == null)
         result = [{key: null, val: ''}, ...result]
 
     return result

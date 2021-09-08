@@ -51,3 +51,8 @@ export type ContainerServices = {
 }
 
 export type ContainerType = <K extends keyof ContainerServices>(name: K) => ContainerServices[K]
+
+export function lazyC<K extends keyof ContainerServices>(serviceName: K): () => ContainerServices[K] {
+    let service = null
+    return () => service == null ? service = globalThis.c(serviceName) : service
+}

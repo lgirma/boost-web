@@ -26,8 +26,8 @@ const DefaultToastState: ToastState = {
 export interface ToastService {
     show(detailKey: string, titleKey: string, type: MessageType, options?: ToastState)
     hide()
-    showSuccess(messageKey: string, options?: ToastState)
-    showError(messageKey: string, options?: ToastState)
+    showSuccess(messageKey?: string, options?: ToastState)
+    showError(messageKey?: string, options?: ToastState)
     showInfo(messageKey: string, options?: ToastState)
     showWarning(messageKey: string, options?: ToastState)
 }
@@ -55,12 +55,12 @@ export class ToastStateService implements ToastService {
         return result
     }
 
-    showSuccess(messageKey: string, options?: ToastState): ToastState {
-        return this.show(messageKey, 'SUCCESS', MessageType.SUCCESS, options);
+    showSuccess(messageKey?: string, options?: ToastState): ToastState {
+        return this.show(messageKey ?? 'SUCCESS', 'SUCCESS', MessageType.SUCCESS, options);
     }
 
-    showError(messageKey: string, options?: ToastState): ToastState {
-        return this.show(messageKey, 'FAILED', MessageType.ERROR, options);
+    showError(messageKey?: string, options?: ToastState): ToastState {
+        return this.show(messageKey ?? 'FAILED', 'FAILED', MessageType.ERROR, options);
     }
 
     showInfo(messageKey: string, options?: ToastState): ToastState {
