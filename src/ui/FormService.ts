@@ -167,6 +167,7 @@ export class SimpleFormService implements FormService {
             '^amount|amount$|^price|price$': 'money',
             '^date|date$': 'date', '^year|year$': 'year', '^month|month$': 'month',
             '^phone|phone$': 'tel',
+            '^age$': 'age',
             '^language|language$': 'language',
             '^rating|rating$': 'rating'
         }

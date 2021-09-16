@@ -35,4 +35,5 @@ export interface HttpConfig {
     apiBaseUrl?: string
     errorCodeKey?: string
     errorDetailsKey?: string
+    skipLoggingErrors?: boolean
 }

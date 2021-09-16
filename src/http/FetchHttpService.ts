@@ -3,22 +3,24 @@ import {HttpError, HttpErrorType, HttpMethod} from "./HttpService";
 import {HttpServiceBase} from "./HttpServiceBase";
 import {tryReadBody} from "./HttpUtils";
 
-function httpError(type: HttpErrorType, status?: number, body?: any): HttpError {
-    const result = {type, status, body, isHandleable: false}
-    result.isHandleable = (body && type == HttpErrorType.ERR_4XX)
-    return result
-}
-
-async function httpErrorFromResp(response: Response): Promise<HttpError> {
-    let type = HttpErrorType.ERR_4XX
-    if (response.status >= 500)
-        type = HttpErrorType.ERR_5XX
-    else if (response.status == 404)
-        type = HttpErrorType.ERR_404
-    return httpError(type, response.status, await tryReadBody(response))
-}
 
 export class FetchHttpService extends HttpServiceBase {
+    httpError(type: HttpErrorType, status?: number, body?: any): HttpError {
+        const result = {type, status, body, isHandleable: false}
+        result.isHandleable = (body && type == HttpErrorType.ERR_4XX)
+        if (!this._config.skipLoggingErrors)
+            console.error('Http Error', result)
+        return result
+    }
+    async httpErrorFromResp(response: Response): Promise<HttpError> {
+        let type = HttpErrorType.ERR_4XX
+        if (response.status >= 500)
+            type = HttpErrorType.ERR_5XX
+        else if (response.status == 404)
+            type = HttpErrorType.ERR_404
+        return this.httpError(type, response.status, await tryReadBody(response))
+    }
+
     async request(method: HttpMethod, url: string, body?: any, config?: RequestInit): Promise<Response> {
         config = config || {};
         config.method = method || 'get';
@@ -45,17 +47,17 @@ export class FetchHttpService extends HttpServiceBase {
                 response = await fetch(`${baseUrl}${url}`, config);
             } catch (err) {
                 this.onResponseError.publish(err)
-                throw httpError(HttpErrorType.NO_CONNECTION)
+                throw this.httpError(HttpErrorType.NO_CONNECTION, 0, err)
             }
             if (!response.ok) {
                 this.onResponseNotOk.publish(response)
-                throw await httpErrorFromResp(response)
+                throw await this.httpErrorFromResp(response)
             }
             this.onResponseSuccess.publish(config)
             return response
         }
         else {
-            throw httpError(HttpErrorType.ERR_REQUEST, null, 'Fetch is not defined')
+            throw this.httpError(HttpErrorType.ERR_REQUEST, null, 'Fetch is not defined')
         }
     }
     
