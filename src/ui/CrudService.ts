@@ -1,8 +1,9 @@
-import {CrudConfig, CrudOptions, CrudOptionsFrom} from "./CrudModels";
+import {CrudConfig, CrudMetadata, CrudOptions, CrudOptionsFrom} from "./CrudModels";
 import {ConfigService} from "../config";
 import {HttpPagedDataSource} from "../data";
 import {DataTableOptions} from "./DataTableModels";
 import {deepMerge, StringUtils} from "../common";
+import {HttpService} from "../http";
 
 export interface CrudService {
     createConfig(from: CrudOptionsFrom): Promise<CrudOptions>
@@ -16,9 +17,13 @@ export class CrudServiceImpl implements CrudService {
             throw 'Crud: Source config and ID cannot be null'
         const id = from.id
         let dataTableOpts = (from.dataTable ?? {}) as DataTableOptions
+        let metadata: CrudMetadata = {}
+
+        try { metadata = await this._http.get(id + '/metadata') } catch {}
 
         return {
             ...from,
+            metadata,
             dataTable: deepMerge({
                 dataSource: new HttpPagedDataSource(this._config.getListUrl(from.id)),
                 commands: []
@@ -42,7 +47,7 @@ export class CrudServiceImpl implements CrudService {
         } as CrudOptions
     }
 
-    constructor(config: ConfigService, private _str: StringUtils) {
+    constructor(config: ConfigService, private _str: StringUtils, private _http: HttpService) {
         const initial = config.get<Partial<CrudConfig>>('crud') ?? {}
         this._config = config.get<CrudConfig>('crud', {
             idField: 'id',

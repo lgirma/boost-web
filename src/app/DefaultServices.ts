@@ -33,7 +33,7 @@ services.add('config', () => new SimpleConfigService(config))
     .add('data-table', c => new DataTableStateService(c('form'), c('string-utils'), c('config')))
     .add('lookup', c => new LookupServiceImpl(c('config')))
     .add('screen', () => new ScreenServiceImpl())
-    .add('crud', c => new CrudServiceImpl(c('config'), c('string-utils')))
+    .add('crud', c => new CrudServiceImpl(c('config'), c('string-utils'), c('http')))
     .add('file', c => new FileServiceImpl(c('http'), c('config')))
     .add('modal-form', () => new ModalFormStateService())
 }

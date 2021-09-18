@@ -64,6 +64,11 @@ export interface CrudOptions {
     canCreate?: boolean
     canDelete?: boolean
     canUpdate?: boolean
+    metadata: CrudMetadata
+}
+
+export interface CrudMetadata {
+    exportColumnList?: string[]
 }
 
 export const enum CrudPages {
